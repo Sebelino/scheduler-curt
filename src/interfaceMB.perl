@@ -32,12 +32,14 @@ my $readparadox = 0;
 my $model = "";
 
 if ($mace_selected) {
-   open(MACE_OUTPUT, "mace -t 30 -n1 -N$domainsize -P < mace.in 2>/dev/null |");
+   #open(MACE_OUTPUT, "mace -t 30 -n1 -N$domainsize -P < mace.in 2>/dev/null |");
+   open(MACE_OUTPUT, "mace -t 30 -n1 -N$domainsize -P < mace.in |");
    $readmace=1;
 } 
 
 if ($paradox_selected) {
-   open(PARADOX_OUTPUT, "paradox paradox.in --sizes 1..$domainsize --print Model 2>/dev/null |");
+   #open(PARADOX_OUTPUT, "paradox paradox.in --sizes 1..$domainsize --print Model 2>/dev/null |");
+   open(PARADOX_OUTPUT, "paradox paradox.in --model --strength $domainsize 2>>log.txt |");
    $readparadox=1;
 } 
 

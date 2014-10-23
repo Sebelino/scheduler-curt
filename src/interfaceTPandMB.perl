@@ -35,7 +35,7 @@ my $winner = "";
 # how to run programs
 my %command = ( 
  otter   => "otter < otter.in > otter.out 2>/dev/null; echo otter > otter.ready",
- prover9   => "prover9 < prover9.in > prover9.out 2>/dev/null; echo prover9 > prover9.ready",
+ #prover9   => "prover9 < prover9.in > prover9.out 2>/dev/null; echo prover9 > prover9.ready",
  bliksem => "bliksem < bliksem.in > bliksem.out 2>/dev/null; echo bliksem > bliksem.ready",
  mace    => "mace -t20 -n1 -N$domainsize -P < mace.in > mace.out 2>/dev/null; echo mace > mace.ready",
  paradox => "paradox paradox.in --sizes 1..$domainsize --print Model > paradox.out 2>/dev/null; echo paradox > paradox.ready"
@@ -48,7 +48,8 @@ open ($log, ">>", "tpandmb.log") or die "Can't open logfile! $!";
 system "rm -f *.ready";
 
 # run any requested processes
-foreach my $p (("prover9", "otter", "bliksem", "mace", "paradox")) {
+foreach my $p (("otter", "bliksem", "mace", "paradox")) {
+#foreach my $p (("prover9", "otter", "bliksem", "mace", "paradox")) {
    if ($pleaseload =~ /$p/) {
       my $forkedpid = fork;
       unless ($forkedpid) {
@@ -61,9 +62,9 @@ foreach my $p (("prover9", "otter", "bliksem", "mace", "paradox")) {
    }
 }
 
-foreach my $process (keys %pids) {
-	print $log "Running $process with PID $pids{$process}\n";
-}
+#foreach my $process (keys %pids) {
+#	print $log "Running $process with PID $pids{$process}\n";
+#}
  
 
 # continue looping while there are still processing running
@@ -80,7 +81,7 @@ while( (keys %pids) > 0 && $winner eq "") {
              if (/end_of_model/) {
                 $winner = "mace";
                 $readmacemodel = 0;
-		print $log "mace won.\n"
+#		print $log "mace won.\n"
              }
              elsif ($readmacemodel) {
                 $model = "$model$_";
@@ -102,7 +103,7 @@ while( (keys %pids) > 0 && $winner eq "") {
                $model = "$model dummy\n]).\n";
                $winner = "paradox";
                $readparadoxmodel = 0;
-	       print $log "paradox won.\n"
+#	       print $log "paradox won.\n"
             }
             elsif ($readparadoxmodel) {
                s/\n/,\n/;
@@ -126,24 +127,24 @@ while( (keys %pids) > 0 && $winner eq "") {
       delete $pids{paradox};
   }
 
-  if (-e "prover9.ready" && $winner eq "") {
-      open(OUTPUT,"prover9.out");
-      while (<OUTPUT>) {
-             if (/THEOREM PROVED/) {
-                $winner = "prover9";
-		print $log "prover9 won.\n"
-            }
-     }
-     close(OUTPUT);
-     delete $pids{prover9};
-  }
+#  if (-e "prover9.ready" && $winner eq "") {
+#      open(OUTPUT,"prover9.out");
+#      while (<OUTPUT>) {
+#             if (/THEOREM PROVED/) {
+#                $winner = "prover9";
+#		print $log "prover9 won.\n"
+#            }
+#     }
+#     close(OUTPUT);
+#     delete $pids{prover9};
+#  }
 
   if (-e "otter.ready" && $winner eq "") {
       open(OUTPUT,"otter.out");
       while (<OUTPUT>) {
              if (/proof of the theorem/) {
                 $winner = "otter";
-		print $log "otter won.\n"
+#		print $log "otter won.\n"
             }
      }
      close(OUTPUT);
@@ -163,21 +164,22 @@ while( (keys %pids) > 0 && $winner eq "") {
   }
 }
 
-print $log "Done. Processes left over are:\n";
-
-foreach my $process (keys %pids) {
-	print $log "$process with PID $pids{$process}\n";
-}
-
-print $log "Killing... ";
+#print $log "Done. Processes left over are:\n";
+#
+#foreach my $process (keys %pids) {
+#	print $log "$process with PID $pids{$process}\n";
+#}
+#
+#print $log "Killing... ";
 
 # kill any remaining child processes (for example, any theorem
 # provers or model builders which are still working)
-foreach (values %pids) { kill $_; print $log $_ . " " }
+foreach (values %pids) { kill $_; }
+#foreach (values %pids) { kill $_; print $log $_ . " " }
 
-print $log ".\n";
+#print $log ".\n";
 
-close $log or die $!;
+#close $log or die $!;
 
 # write the results out to a file which will be read by Curt
 open(OUTPUT,">tpmb.out");
