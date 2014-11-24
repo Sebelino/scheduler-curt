@@ -55,46 +55,11 @@ lexEntry(det,[syntax:[which],mood:int,type:wh]).
    Nouns
 ========================================================================*/
 
-lexEntry(noun,[symbol:animal,syntax:[animal]]).
-lexEntry(noun,[symbol:beverage,syntax:[beverage]]).
-lexEntry(noun,[symbol:building,syntax:[building]]).
-lexEntry(noun,[symbol:cup,syntax:[cup]]).
-lexEntry(noun,[symbol:burger,syntax:[burger]]).
-lexEntry(noun,[symbol:boxer,syntax:[boxer]]).
-lexEntry(noun,[symbol:boss,syntax:[boss]]).
-lexEntry(noun,[symbol:car,syntax:[car]]).
-lexEntry(noun,[symbol:chainsaw,syntax:[chainsaw]]).
-lexEntry(noun,[symbol:criminal,syntax:[criminal]]).
-lexEntry(noun,[symbol:customer,syntax:[customer]]).
-lexEntry(noun,[symbol:drug,syntax:[drug]]).
-lexEntry(noun,[symbol:episode,syntax:[episode]]).
-lexEntry(noun,[symbol:fdshake,syntax:[five,dollar,shake]]).
-lexEntry(noun,[symbol:footmassage,syntax:[foot,massage]]).
-lexEntry(noun,[symbol:gimp,syntax:[gimp]]).
-lexEntry(noun,[symbol:glass,syntax:[glass]]).
-lexEntry(noun,[symbol:gun,syntax:[gun]]).
-lexEntry(noun,[symbol:hammer,syntax:[hammer]]).
-lexEntry(noun,[symbol:hashbar,syntax:[hash,bar]]).
-lexEntry(noun,[symbol:person,syntax:[person]]).
-lexEntry(noun,[symbol:husband,syntax:[husband]]).
-lexEntry(noun,[symbol:joke,syntax:[joke]]).
-lexEntry(noun,[symbol:man,syntax:[man]]).
-lexEntry(noun,[symbol:needle,syntax:[needle]]).
-lexEntry(noun,[symbol:owner,syntax:[owner]]).
-lexEntry(noun,[symbol:piercing,syntax:[piercing]]).
-lexEntry(noun,[symbol:plant,syntax:[plant]]).
-lexEntry(noun,[symbol:qpwc,syntax:[quarter,pounder,with,cheese]]).
-lexEntry(noun,[symbol:radio,syntax:[radio]]).
-lexEntry(noun,[symbol:restaurant,syntax:[restaurant]]).
-lexEntry(noun,[symbol:robber,syntax:[robber]]).
-lexEntry(noun,[symbol:suitcase,syntax:[suitcase]]).
-lexEntry(noun,[symbol:shotgun,syntax:[shotgun]]).
-lexEntry(noun,[symbol:sword,syntax:[sword]]).
-lexEntry(noun,[symbol:vehicle,syntax:[vehicle]]).
-lexEntry(noun,[symbol:weapon,syntax:[weapon]]).
-lexEntry(noun,[symbol:wife,syntax:[wife]]).
-lexEntry(noun,[symbol:woman,syntax:[woman]]).
+lexEntry(noun,[symbol:movie,syntax:[movie]]).
+lexEntry(noun,[symbol:friday,syntax:[friday]]).
 
+lexEntry(noun,[symbol:'7am',syntax:['7am']]).
+lexEntry(noun,[symbol:'9am',syntax:['9am']]).
 
 /*========================================================================
    Proper Names
@@ -244,10 +209,9 @@ lexEntry(cop,[pol:neg,syntax:[are,not],inf:fin,num:pl]).
    Prepositions
 ========================================================================*/
 
-lexEntry(prep,[symbol:about,syntax:[about]]).
-lexEntry(prep,[symbol:in,syntax:[in]]).
-lexEntry(prep,[symbol:of,syntax:[of]]).
-lexEntry(prep,[symbol:with,syntax:[with]]).
+lexEntry(prep,[symbol:from,syntax:[from]]).
+lexEntry(prep,[symbol:to,syntax:[to]]).
+lexEntry(prep,[symbol:on,syntax:[on]]).
 
 
 /*========================================================================

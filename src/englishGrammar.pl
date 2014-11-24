@@ -34,6 +34,18 @@ t([sem:T])-->
    {combine(t:T,[s:S])}.
 
 t([sem:T])--> 
+   np([coord:_,num:_,gap:_,sem:NP]),
+   {combine(t:T,[np:NP])}.
+
+t([sem:T])--> 
+   fnp([sem:FNP]),
+   {combine(t:T,[fnp:FNP])}.
+
+t([sem:T])--> 
+   noun([sem:Noun]),
+   {combine(t:T,[noun:Noun])}.
+
+t([sem:T])--> 
    q([sem:Q]),
    {combine(t:T,[q:Q])}.
 
@@ -156,6 +168,21 @@ np([coord:no,num:sg,gap:[],sem:NP])-->
    qnp([mood:decl,sem:QNP]), 
    {combine(np:NP,[qnp:QNP])}.
 
+/* Custom */
+
+fnp([sem:FNP])--> 
+   noun([sem:Noun]),
+   {combine(fnp:FNP,[noun:Noun])}.
+
+fnp([sem:FNP])--> 
+   noun([sem:Noun]),
+   fpp([sem:FPP]),
+   {combine(fnp:FNP,[noun:Noun,fpp:FPP])}.
+
+fpp([sem:FPP])--> 
+   prep([sem:Prep]), 
+   fnp([sem:FNP]), 
+   {combine(fpp:FPP,[prep:Prep,fnp:FNP])}.
 
 /*========================================================================
    WH Noun Phrases

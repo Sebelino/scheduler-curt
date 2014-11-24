@@ -31,6 +31,19 @@ combine(t:Converted,[s:Sem]):-
 combine(t:Converted,[q:Sem]):- 
    betaConvert(Sem,Converted).
 
+combine(t:Converted,[noun:Sem]):- 
+   betaConvert(Sem,Converted).
+
+combine(t:Converted,[np:Sem]):- 
+   betaConvert(Sem,Converted).
+
+combine(t:Converted,[fnp:Sem]):- 
+   betaConvert(Sem,Converted).
+
+combine(fnp:app(A,B),[noun:A]).
+combine(fnp:app(A,B),[noun:A,fpp:B]).
+combine(fpp:app(A,B),[prep:A,fnp:B]).
+
 combine(s:app(A,B),[s:A,s:B]).
 combine(s:lam(B,imp(S,B)),[if:S]).
 combine(s:lam(B,or(S,B)),[either:S]).
