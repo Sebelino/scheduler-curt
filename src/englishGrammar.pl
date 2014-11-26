@@ -176,9 +176,17 @@ eventspec([sem:Eventspec])-->
    evt([sem:TimeA]), 
    prep([sem:To]), 
    evt([sem:TimeB]), 
-   prep([sem:On]), 
-   evt([sem:Weekday]), 
-   {combine(eventspec:Eventspec,[evt:Event,prep:From,evt:TimeA,prep:To,evt:TimeB,prep:On,evt:Weekday])}.
+   {combine(eventspec:Eventspec,[evt:Event,prep:From,evt:TimeA,prep:To,evt:TimeB])}.
+
+%eventspec([sem:Eventspec])--> 
+%   evt([sem:Event]), 
+%   prep([sem:From]), 
+%   evt([sem:TimeA]), 
+%   prep([sem:To]), 
+%   evt([sem:TimeB]), 
+%   prep([sem:On]), 
+%   evt([sem:Weekday]), 
+%   {combine(eventspec:Eventspec,[evt:Event,prep:From,evt:TimeA,prep:To,evt:TimeB,prep:On,evt:Weekday])}.
 
 /*========================================================================
    WH Noun Phrases

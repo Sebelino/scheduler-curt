@@ -30,6 +30,8 @@
 
 sentence([movie,from,'7am',to,'9am',on,friday],1).
 
+sentence([movie,from,'7am',to,'9am'],1).
+
 sentence([movie],1).
 
 sentence([movie,from,movie],1).

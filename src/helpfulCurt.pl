@@ -151,7 +151,8 @@ curtUpdate(Input,Moves,run):-
       answerQuestion(que(X,R,S),OldModels,Moves)
    ;  
       \+ Readings=[que(_,_,_)|_],
-      consistentReadings(Readings,[]-ConsReadings,[]-Models),
+      formatTime(Readings,NewReadings),
+      consistentReadings(NewReadings,[]-ConsReadings,[]-Models),
       (
          ConsReadings=[],
          Moves=[contradiction]
@@ -173,6 +174,16 @@ curtUpdate(Input,Moves,run):-
 
 curtUpdate(_,[noparse],run).
 
+formatTime([evt(movie,'7am','9am')],[evt(movie,t2014_11_28_19_0_0,t2014_11_28_21_0_0)]).
+
+formatTime([evt(movie,TimeA,TimeB)],[evt(movie,TimestampA,TimestampB)]) :-
+    convertTime(TimeA,TimestampA),
+    convertTime(TimeB,TimestampB).
+
+convertTime(A,A).
+
+%formatTime([movie,from,'7am',to,'9am',on,friday],
+%    [movie,from,t2014_11_28_19_0_0,to,t2014_11_28_21_0_0,on,friday]).
 
 /*========================================================================
    Combine New Utterances with History
