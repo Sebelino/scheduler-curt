@@ -46,7 +46,7 @@ semLex(noun,M):-
         sem:[lam(X,Formula)]],
    compose(Formula,Sym,[X]).
 
-semLex(event,M):-
+semLex(evt,M):-
    M = [symbol:Sym,
         sem:Sym].
 

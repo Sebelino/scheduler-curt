@@ -171,14 +171,14 @@ np([coord:no,num:sg,gap:[],sem:NP])-->
 /* Custom */
 
 eventspec([sem:Eventspec])--> 
-   event([sem:Event]), 
+   evt([sem:Event]), 
    prep([sem:From]), 
-   event([sem:TimeA]), 
+   evt([sem:TimeA]), 
    prep([sem:To]), 
-   event([sem:TimeB]), 
+   evt([sem:TimeB]), 
    prep([sem:On]), 
-   event([sem:Weekday]), 
-   {combine(eventspec:Eventspec,[event:Event,prep:From,event:TimeA,prep:To,event:TimeB,prep:On,event:Weekday])}.
+   evt([sem:Weekday]), 
+   {combine(eventspec:Eventspec,[evt:Event,prep:From,evt:TimeA,prep:To,evt:TimeB,prep:On,evt:Weekday])}.
 
 /*========================================================================
    WH Noun Phrases
@@ -393,7 +393,7 @@ noun([sem:Sem])-->
    Word,
    {semLex(noun,[symbol:Sym,sem:Sem])}.
 
-event([sem:Sem])--> 
-   {lexEntry(event,[symbol:Sym,syntax:Word])},
+evt([sem:Sem])--> 
+   {lexEntry(evt,[symbol:Sym,syntax:Word])},
    Word,
-   {semLex(event,[symbol:Sym,sem:Sem])}.
+   {semLex(evt,[symbol:Sym,sem:Sem])}.

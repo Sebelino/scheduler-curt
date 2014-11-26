@@ -168,3 +168,19 @@ formula2symbols(F,S1,S3):-
    memberList(symbol(Symbol,2),S1),
    formula2symbols(Arg1,S1,S2),
    formula2symbols(Arg2,S2,S3).
+
+formula2symbols(F,S1,[symbol(Symbol,3)|S4]):- 
+   basicFormula(F),
+   compose(F,Symbol,[Arg1,Arg2,Arg3]),
+   \+ memberList(symbol(Symbol,3),S1),
+   formula2symbols(Arg1,S1,S2),
+   formula2symbols(Arg2,S2,S3),
+   formula2symbols(Arg3,S3,S4).
+
+formula2symbols(F,S1,S4):- 
+   basicFormula(F),
+   compose(F,Symbol,[Arg1,Arg2,Arg3]),
+   memberList(symbol(Symbol,3),S1),
+   formula2symbols(Arg1,S1,S2),
+   formula2symbols(Arg2,S2,S3),
+   formula2symbols(Arg3,S3,S4).
