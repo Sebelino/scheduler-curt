@@ -55,11 +55,11 @@ lexEntry(det,[syntax:[which],mood:int,type:wh]).
    Nouns
 ========================================================================*/
 
-lexEntry(noun,[symbol:movie,syntax:[movie]]).
-lexEntry(noun,[symbol:friday,syntax:[friday]]).
+lexEntry(event,[symbol:movie,syntax:[movie]]).
+lexEntry(event,[symbol:friday,syntax:[friday]]).
 
-lexEntry(noun,[symbol:'7am',syntax:['7am']]).
-lexEntry(noun,[symbol:'9am',syntax:['9am']]).
+lexEntry(event,[symbol:'7am',syntax:['7am']]).
+lexEntry(event,[symbol:'9am',syntax:['9am']]).
 
 /*========================================================================
    Proper Names

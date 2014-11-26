@@ -46,7 +46,7 @@ combine(t:Converted,[eventspec:Sem]):-
 %combine(fnp:app(A,B),[noun:A]).
 %combine(fnp:app(A,B),[noun:A,fpp:B]).
 combine(fpp:app(A,B),[prep:A,fnp:B]).
-combine(eventspec:app(A,[mia]),[noun:A,prep:B,noun:C,prep:D,noun:E,prep:F,noun:G]).
+combine(eventspec:event(A,C,E),[event:A,prep:B,event:C,prep:D,event:E,prep:F,event:G]).
 
 combine(s:app(A,B),[s:A,s:B]).
 combine(s:lam(B,imp(S,B)),[if:S]).

@@ -37,10 +37,6 @@ t([sem:T])-->
    np([coord:_,num:_,gap:_,sem:NP]),
    {combine(t:T,[np:NP])}.
 
-%t([sem:T])--> 
-%   fnp([sem:FNP]),
-%   {combine(t:T,[fnp:FNP])}.
-
 t([sem:T])--> 
    eventspec([sem:Eventspec]),
    {combine(t:T,[eventspec:Eventspec])}.
@@ -174,29 +170,15 @@ np([coord:no,num:sg,gap:[],sem:NP])-->
 
 /* Custom */
 
-%fnp([sem:FNP])--> 
-%   noun([sem:Noun]),
-%   {combine(fnp:FNP,[noun:Noun])}.
-%
-%fnp([sem:FNP])--> 
-%   noun([sem:Noun]),
-%   fpp([sem:FPP]),
-%   {combine(fnp:FNP,[noun:Noun,fpp:FPP])}.
-%
-%fpp([sem:FPP])--> 
-%   prep([sem:Prep]), 
-%   fnp([sem:FNP]), 
-%   {combine(fpp:FPP,[prep:Prep,fnp:FNP])}.
-
 eventspec([sem:Eventspec])--> 
-   noun([sem:Event]), 
+   event([sem:Event]), 
    prep([sem:From]), 
-   noun([sem:TimeA]), 
+   event([sem:TimeA]), 
    prep([sem:To]), 
-   noun([sem:TimeB]), 
+   event([sem:TimeB]), 
    prep([sem:On]), 
-   noun([sem:Weekday]), 
-   {combine(eventspec:Eventspec,[noun:Event,prep:From,noun:TimeA,prep:To,noun:TimeB,prep:On,noun:Weekday])}.
+   event([sem:Weekday]), 
+   {combine(eventspec:Eventspec,[event:Event,prep:From,event:TimeA,prep:To,event:TimeB,prep:On,event:Weekday])}.
 
 /*========================================================================
    WH Noun Phrases
@@ -411,3 +393,7 @@ noun([sem:Sem])-->
    Word,
    {semLex(noun,[symbol:Sym,sem:Sem])}.
 
+event([sem:Sem])--> 
+   {lexEntry(event,[symbol:Sym,syntax:Word])},
+   Word,
+   {semLex(event,[symbol:Sym,sem:Sem])}.
