@@ -39,7 +39,7 @@ semLex(pn,M):-
 
 semLex(noun,M):-
    M = [symbol:Sym,
-        sem:lam(X,Formula)],
+        sem:Formula],
    compose(Formula,Sym,[X]).
 
 semLex(iv,M):-
