@@ -52,7 +52,7 @@
                               list2string/2,
                               selectReadings/3]).
 
-:- use_module(library(julian),[form_time/1]).
+:- use_module(library(julian),[form_time/1,month_number/2]).
 
 /*========================================================================
    Dynamic Predicates
@@ -153,9 +153,37 @@ showModel(model(_,Interpretation)):-
     member(f(0,Event,DEvent),Interpretation),
     member(f(0,TimeA,DTimeA),Interpretation),
     member(f(0,TimeB,DTimeB),Interpretation),
-    atomic_list_concat(['*',Event,'from',TimeA,'to',TimeB],' ',Output),
+    timestamp2readable(TimeA,RTimeA),
+    timestamp2readable(TimeB,RTimeB),
+    capitalize(Event,UEvent),
+    atomic_list_concat(['*',UEvent,'from',RTimeA,'to',RTimeB],' ',Output),
     format(Output,[]).
 
+padNumber(Number,Number) :- atom_length(Number,2).
+padNumber(Number,PNumber) :-
+    atom_length(Number,1),
+    atomic_list_concat(['0',Number],PNumber).
+
+% 2014_... -> 7:0 29 November 2014
+timestamp2readable(Stamp,Readable) :-
+    ourFormat2List(Stamp,[Y,Mo,D,H,Mi]),
+    padNumber(H,PH),
+    padNumber(Mi,PMi),
+    atomic_list_concat([PH,PMi],':',T),
+    atom_number(Mo,NMo),
+    month_number(RMo,NMo),
+    capitalize(RMo,UMo),
+    atomic_list_concat([D,Y],', ',DY),
+    atomic_list_concat([T,UMo,DY],' ',Readable).
+
+% november -> 'November'
+capitalize(Lower,Upper) :-
+    atom_codes(Lower,[H|T]),
+    to_upper(H,UpperH),
+    atom_codes(Upper,[UpperH|T]).
+
+ourFormat2List(Our,T) :-
+    atomic_list_concat(['t'|T],'_',Our).
 
 curtUpdate(Input,Moves,run):-
    kellerStorage(Input,Readings), !,
