@@ -29,7 +29,15 @@
    Axioms for Situational Knowledge
 ========================================================================*/
 
-%% There are at least two different cars
-%%
-%situationalKnowledge(Axiom):-
-%   Axiom = some(X,some(Y,and(car(X),and(car(Y),not(eq(X,Y)))))).
+% There are at least two different cars
+
+situationalKnowledge(Axiom):-
+   Axiom = all(T,all(A,all(B,imp(evt(T,A,B),
+   and(time(A),and(time(B),and(title(T),not(eq(A,B)))))
+   )))).
+
+situationalKnowledge(Axiom):-
+   Axiom = all(X,imp(title(X),not(time(X)))).
+
+situationalKnowledge(Axiom):-
+   Axiom = all(X,imp(time(X),not(title(X)))).
