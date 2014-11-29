@@ -226,10 +226,20 @@ consistentReadings([New|Readings],C1-C2,M1-M2):-
    readings(Old),
    (
       consistent(Old,New,Model), !,
-      consistentReadings(Readings,[New|C1]-C2,[Model|M1]-M2) 
+      operateModel(New,Model,NewModel),
+      consistentReadings(Readings,[New|C1]-C2,[NewModel|M1]-M2) 
    ;
       consistentReadings(Readings,C1-C2,M1-M2) 
    ).
+
+operateModel(evt(movie,A,B),_,NewModel):-
+    NewModel = model([d1,d2,d3],[
+        f(0,movie,d1),
+        f(0,A,d2),
+        f(0,B,d3),
+        f(3,evt,[(d1,d2,d3)]),
+        f(2,lt,[(d2,d3)])
+    ]).
 
 
 /*========================================================================
