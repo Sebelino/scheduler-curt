@@ -52,6 +52,7 @@
                               list2string/2,
                               selectReadings/3]).
 
+:- use_module(library(julian),[form_time/1]).
 
 /*========================================================================
    Dynamic Predicates
@@ -174,13 +175,31 @@ curtUpdate(Input,Moves,run):-
 
 curtUpdate(_,[noparse],run).
 
-formatTime([evt(movie,'7am','9am')],[evt(movie,t2014_11_28_19_0_0,t2014_11_28_21_0_0)]).
-
 formatTime([evt(movie,TimeA,TimeB)],[evt(movie,TimestampA,TimestampB)]) :-
     convertTime(TimeA,TimestampA),
     convertTime(TimeB,TimestampB).
 
-convertTime(A,A).
+convertTime(MHour,TimeStamp) :-
+    addM(MHour,Hour),
+    form_time([now,Y-Mo-D]),
+    form_time([now,_:_:_]),
+    atom_number(YA,Y),
+    atom_number(MoA,Mo),
+    atom_number(DA,D),
+    atomic_list_concat(['t',YA,MoA,DA,Hour,'0'],'_',TimeStamp).
+
+% '7pm' -> '19', '7am' -> '7'
+addM(MTime,Time) :-
+    atom_length(MTime,L),
+    B is L-2,
+    sub_atom(MTime,B,2,0,Trail),
+    member(Trail,['am','pm']),
+    sub_atom(MTime,0,_,2,HA),
+    atom_number(HA,H),
+    (Trail = 'am', N = H ; Trail = 'pm', N is H+12),
+    atom_number(Time,N).
+
+
 
 %formatTime([movie,from,'7am',to,'9am',on,friday],
 %    [movie,from,t2014_11_28_19_0_0,to,t2014_11_28_21_0_0,on,friday]).

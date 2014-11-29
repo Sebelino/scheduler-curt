@@ -60,6 +60,8 @@ lexEntry(evt,[symbol:friday,syntax:[friday]]).
 
 lexEntry(evt,[symbol:'7am',syntax:['7am']]).
 lexEntry(evt,[symbol:'9am',syntax:['9am']]).
+lexEntry(evt,[symbol:'7pm',syntax:['7pm']]).
+lexEntry(evt,[symbol:'9pm',syntax:['9pm']]).
 
 lexEntry(noun,[symbol:animal,syntax:[animal]]).
 lexEntry(noun,[symbol:beverage,syntax:[beverage]]).
