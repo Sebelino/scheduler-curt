@@ -143,6 +143,20 @@ curtUpdate([history],[],run):- !,
    history(H),
    printRepresentations(H).
 
+
+curtUpdate([show,my,appointments],[],run):- !,
+   models([M]),
+   showModel(M).
+
+showModel(model(_,Interpretation)):-
+    member(f(3,evt,[ (DEvent,DTimeA,DTimeB)]),Interpretation),
+    member(f(0,Event,DEvent),Interpretation),
+    member(f(0,TimeA,DTimeA),Interpretation),
+    member(f(0,TimeB,DTimeB),Interpretation),
+    atomic_list_concat(['*',Event,'from',TimeA,'to',TimeB],' ',Output),
+    format(Output,[]).
+
+
 curtUpdate(Input,Moves,run):-
    kellerStorage(Input,Readings), !,
    updateHistory(Input),
@@ -178,6 +192,10 @@ curtUpdate(_,[noparse],run).
 formatTime([evt(movie,TimeA,TimeB)],[evt(movie,TimestampA,TimestampB)]) :-
     convertTime(TimeA,TimestampA),
     convertTime(TimeB,TimestampB).
+
+formatTime([Reading],[Reading]) :-
+    compose(Reading,Sym,_),
+    \+ Sym = evt.
 
 convertTime(MHour,TimeStamp) :-
     addM(MHour,Hour),
@@ -240,6 +258,8 @@ operateModel(evt(movie,A,B),_,NewModel):-
         f(3,evt,[(d1,d2,d3)]),
         f(2,lt,[(d2,d3)])
     ]).
+
+operateModel(Pred,Model,Model) :- \+ Pred = evt.
 
 
 /*========================================================================

@@ -25,15 +25,6 @@
    Semantic Rules
 ========================================================================*/
 
-combine(t:Converted,[noun:Sem]):- 
-   betaConvert(Sem,Converted).
-   
-%combine(t:Converted,[fnp:Sem]):- 
-%   betaConvert(Sem,Converted).
-
-combine(t:Converted,[eventspec:Sem]):- 
-   betaConvert(Sem,Converted).
-
 combine(t:Converted,[s:Sem]):- 
    betaConvert(Sem,Converted).
 
@@ -89,10 +80,4 @@ combine(tbar:QRed,[q:Q])
 combine(pp:app(A,B),[prep:A,np:B]).
 
 combine(rc:app(A,B),[relpro:A,vp:B]).
-
-/* Custom */
-
-%combine(fnp:app(A,B),[noun:A,fpp:B]).
-combine(fpp:app(A,B),[prep:A,fnp:B]).
-combine(eventspec:app(A,mia),[noun:A,prep:B,noun:C,prep:D,noun:E,prep:F,noun:G]).
 

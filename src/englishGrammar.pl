@@ -42,6 +42,10 @@ t([sem:T])-->
    {combine(t:T,[eventspec:Eventspec])}.
 
 t([sem:T])--> 
+   show([sem:Show]),
+   {combine(t:T,[show:Show])}.
+
+t([sem:T])--> 
    noun([sem:Noun]),
    {combine(t:T,[noun:Noun])}.
 
@@ -178,15 +182,12 @@ eventspec([sem:Eventspec])-->
    evt([sem:TimeB]), 
    {combine(eventspec:Eventspec,[evt:Event,prep:From,evt:TimeA,prep:To,evt:TimeB])}.
 
-%eventspec([sem:Eventspec])--> 
-%   evt([sem:Event]), 
-%   prep([sem:From]), 
-%   evt([sem:TimeA]), 
-%   prep([sem:To]), 
-%   evt([sem:TimeB]), 
-%   prep([sem:On]), 
-%   evt([sem:Weekday]), 
-%   {combine(eventspec:Eventspec,[evt:Event,prep:From,evt:TimeA,prep:To,evt:TimeB,prep:On,evt:Weekday])}.
+show([sem:Show])--> 
+   tv([inf:_,num:_,sem:TV]), 
+   adj([sem:Adj]), 
+   noun([sem:Noun]), 
+   {combine(show:Show,[tv:TV,adj:Adj,noun:Noun])}.
+
 
 /*========================================================================
    WH Noun Phrases

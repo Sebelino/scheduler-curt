@@ -63,6 +63,13 @@ lexEntry(evt,[symbol:'9am',syntax:['9am']]).
 lexEntry(evt,[symbol:'7pm',syntax:['7pm']]).
 lexEntry(evt,[symbol:'9pm',syntax:['9pm']]).
 
+lexEntry(adj,[symbol:my,syntax:[my]]).
+lexEntry(adj,[symbol:all,syntax:[all]]).
+
+lexEntry(noun,[symbol:appointment,syntax:[appointments]]).
+lexEntry(noun,[symbol:appointment,syntax:[events]]).
+lexEntry(noun,[symbol:appointment,syntax:[schedule]]).
+
 lexEntry(noun,[symbol:animal,syntax:[animal]]).
 lexEntry(noun,[symbol:beverage,syntax:[beverage]]).
 lexEntry(noun,[symbol:building,syntax:[building]]).
@@ -101,6 +108,7 @@ lexEntry(noun,[symbol:sword,syntax:[sword]]).
 lexEntry(noun,[symbol:vehicle,syntax:[vehicle]]).
 lexEntry(noun,[symbol:weapon,syntax:[weapon]]).
 lexEntry(noun,[symbol:wife,syntax:[wife]]).
+lexEntry(noun,[symbol:woman,syntax:[woman]]).
 lexEntry(noun,[symbol:woman,syntax:[woman]]).
 
 /*========================================================================
@@ -235,6 +243,10 @@ lexEntry(tv,[symbol:shoot,syntax:[shot],inf:inf,num:sg]).
 lexEntry(tv,[symbol:shoot,syntax:[shot],inf:fin,num:sg]). % interesting. they allow past tense :-)
 lexEntry(tv,[symbol:shoot,syntax:[shoots],inf:fin,num:sg]).
 lexEntry(tv,[symbol:shoot,syntax:[shoot],inf:fin,num:pl]).
+
+lexEntry(tv,[symbol:show,syntax:[show],inf:fin,num:sg]).
+lexEntry(tv,[symbol:show,syntax:[list],inf:fin,num:sg]).
+lexEntry(tv,[symbol:show,syntax:[display],inf:fin,num:sg]).
 
 
 /*========================================================================

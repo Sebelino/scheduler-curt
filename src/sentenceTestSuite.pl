@@ -28,6 +28,8 @@
    Sentences
 ========================================================================*/
 
+sentence([show,my,appointments],1).
+
 sentence([movie,from,'7am',to,'9am',on,friday],1).
 
 sentence([movie,from,'7am',to,'9am'],1).

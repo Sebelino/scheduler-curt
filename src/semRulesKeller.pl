@@ -43,11 +43,16 @@ combine(t:Converted,[np:Sem]):-
 combine(t:Converted,[eventspec:Sem]):- 
    betaConvert(Sem,Converted).
 
+combine(t:Converted,[show:Sem]):- 
+   betaConvert(Sem,Converted).
+
 %combine(fnp:app(A,B),[noun:A]).
 %combine(fnp:app(A,B),[noun:A,fpp:B]).
 combine(fpp:app(A,B),[prep:A,fnp:B]).
 %combine(eventspec:evt(A,C,E),[evt:A,prep:B,evt:C,prep:D,evt:E,prep:F,evt:G]).
 combine(eventspec:evt(A,C,E),[evt:A,prep:B,evt:C,prep:D,evt:E]).
+
+combine(show:show,[tv:_,adj:_,noun:_]).
 
 combine(s:app(A,B),[s:A,s:B]).
 combine(s:lam(B,imp(S,B)),[if:S]).
