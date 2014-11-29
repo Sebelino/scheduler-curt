@@ -1,7 +1,3 @@
-# Advertent Curt
+# Scheduler Curt
 
-This is my B.A. thesis and is currently work in progress.
-
-Topic: 
-## From Questions to Queries
-### Enhancing the Curt System by a Theory and Implementation of Embedded WH-Questions
+This is the term project of Sebastian Olsson and Ken Cheung in the course CS579: Computational Linguistics at KAIST.
