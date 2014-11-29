@@ -422,6 +422,12 @@ mace2f([predicate(Relation,V)|Terms],D,[f(2,Functor,X)|F]):-
 	positivePairValues(V,Size,1,1,X),
 	mace2f(Terms,D,F).
 
+mace2f([predicate(Relation,V)|Terms],D,[f(3,Functor,X)|F]):-
+	Relation =.. [Functor,_,_,_], !,
+	length(D,Size),
+	positiveTripleValues(V,Size,1,1,1,X),
+	mace2f(Terms,D,F).
+
 mace2f([_|Terms],D,F):-
 	mace2f(Terms,D,F).
 
@@ -477,6 +483,43 @@ positivePairValues([0|Values],Size,I1,J1,Rest):-
 	),
 	positivePairValues(Values,Size,I2,J2,Rest).
 
+
+
+positiveTripleValues([],_,_,_,_,[]).
+
+positiveTripleValues([1|Values],Size,I1,J1,K1,[(X3,X2,X1)|Rest]):-
+	name(I1,Codes1),
+	name(X1,[100|Codes1]),
+	name(J1,Codes2),
+	name(X2,[100|Codes2]),
+	name(K1,Codes3),
+	name(X3,[100|Codes3]),
+	(
+	    I1 < Size,
+	    I2 is I1 + 1,
+	    J2 is J1,
+        K2 is K1 + 1
+	;   
+	    I1 = Size,
+	    I2 = 1,
+	    J2 is J1 + 1,
+        K2 is K1
+	),
+	positiveTripleValues(Values,Size,I2,J2,K2,Rest).
+
+positiveTripleValues([0|Values],Size,I1,J1,K1,Rest):-
+	(
+	    I1 < Size, 
+	    I2 is I1 + 1,
+	    J2 is J1,
+        K2 is K1 + 1
+	;
+	    I1 = Size,
+	    I2 = 1,
+	    J2 is J1 + 1,
+        K2 is K1
+	),
+	positiveTripleValues(Values,Size,I2,J2,K2,Rest).
 
 /*========================================================================
    Info

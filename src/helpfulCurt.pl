@@ -272,7 +272,8 @@ consistentReadings([New|Readings],C1-C2,M1-M2):-
    readings(Old),
    (
       consistent(Old,New,Model), !,
-      operateModel(New,Model,NewModel),
+      %operateModel(New,Model,NewModel),
+      NewModel = Model,
       consistentReadings(Readings,[New|C1]-C2,[NewModel|M1]-M2) 
    ;
       consistentReadings(Readings,C1-C2,M1-M2) 
