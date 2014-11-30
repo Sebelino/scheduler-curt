@@ -52,7 +52,7 @@
                               list2string/2,
                               selectReadings/3]).
 
-:- use_module(library(julian),[form_time/1,month_number/2]).
+:- use_module(library(julian),[form_time/1,form_time/2,month_number/2,compare_time/3]).
 
 /*========================================================================
    Dynamic Predicates
@@ -194,9 +194,10 @@ curtUpdate(Input,Moves,run):-
       answerQuestion(que(X,R,S),OldModels,Moves)
    ;  
       \+ Readings=[que(_,_,_)|_],
-      formatTime(Readings,NewReadings),
-      consistentReadings(NewReadings,[]-ConsReadings,[]-Models),
-      operateModels(Models,NewModels),
+      formatTime(Readings,[evt(T,A,B)]),
+      NewerReadings = [and(evt(T,A,B),lt(A,B),lt(B,A))],
+      consistentReadings(NewerReadings,[]-ConsReadings,[]-Models),
+      (Model = [] ; operateModels(Models,NewModels)),
       (
          ConsReadings=[],
          Moves=[contradiction]
@@ -231,10 +232,36 @@ operateModel(model(Domain,Interpretation),NewModel) :-
     stripOtherElements(Interpretation,NewDomain,NewTimeDomain),
     associate(TimeEntries,NewTimeDomain,Association),
     distinguish(TimeEntries,Association,NewTE),
-    replaceTimeEntries(TimeEntries,NewTE,Interpretation,NewI),
-    reworkTime(NewTE,NewI,NewerI),
-    reworkEvent(NewerI,Association,NewestI),
-    NewModel = model(NewDomain,NewestI).
+    replaceTimeEntries(TimeEntries,NewTE,Interpretation,I2),
+    reworkTime(NewTE,I2,I3),
+    reworkEvent(I3,Association,I4),
+    %addLt(I4,I5),
+    I5 = I4,
+    NewModel = model(NewDomain,I5).
+
+addLt(Interpretation,NewI) :-
+    member(f(3,evt,Triples),Interpretation),
+    findall( (A,B),member( (_,A,B),Triples),LtPairs),
+    stripFalseLtPairs(LtPairs,Interpretation,TrueLtPairs),
+    LtEntries = [f(2,lt,TrueLtPairs)],
+    append(Interpretation,LtEntries,NewI).
+
+stripFalseLtPairs([],_,[]).
+stripFalseLtPairs([(E1,E2)|LtPairs],Interpretation,[(E1,E2)|TrueLtPairs]) :-
+    member(f(0,Stamp1,E1),Interpretation),
+    member(f(0,Stamp2,E2),Interpretation),
+    lessThan(Stamp1,Stamp2),
+    stripFalseLtPairs(LtPairs,Interpretation,TrueLtPairs).
+stripFalseLtPairs([(E1,E2)|LtPairs],Interpretation,TrueLtPairs) :-
+    member(f(0,Stamp1,E1),Interpretation),
+    member(f(0,Stamp2,E2),Interpretation),
+    \+ lessThan(Stamp1,Stamp2),
+    stripFalseLtPairs(LtPairs,Interpretation,TrueLtPairs).
+
+lessThan(Stamp1,Stamp2) :-
+    stamp2time(Stamp1,Time1),
+    stamp2time(Stamp2,Time2),
+    compare_time(<,Time1,Time2).
 
 reworkEvent(Interpretation,Association,[f(3,evt,NewTriples)|IntermediateI]) :-
     member(f(3,evt,Triples),Interpretation),
@@ -350,7 +377,15 @@ addM(MTime,Time) :-
     (Trail = 'am', N = H ; Trail = 'pm', N is H+12),
     atom_number(Time,N).
 
-
+stamp2time(Stamp,Time) :-
+    atomic_list_concat([t,Y,Mo,D,H,Mi],'_',Stamp),
+    padNumber(Mo,PMo),
+    padNumber(D,PD),
+    padNumber(H,PH),
+    padNumber(Mi,PMi),
+    atomic_list_concat([Y,'-',PMo,'-',PD,'T',PH,':',PMi,':','00'],RFC),
+    atom_string(RFC,SRFC),
+    form_time(rfc3339(SRFC),Time).
 
 %formatTime([movie,from,'7am',to,'9am',on,friday],
 %    [movie,from,t2014_11_28_19_0_0,to,t2014_11_28_21_0_0,on,friday]).
