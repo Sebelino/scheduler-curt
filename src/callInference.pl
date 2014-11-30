@@ -512,35 +512,6 @@ positiveTripleValues([0|Values],Size,I1,J1,K1,Rest):-
     positiveTripleValues(Values,Size,I2,J2,K2,Rest).
 
 
-
-%positiveTripleValues([0|Values],Size,I1,J1,K1,Rest):-
-%    (
-%        I1 < Size, 
-%        I2 is I1 + 1,
-%        (
-%            J1 < Size,
-%            J2 is J1,
-%            K2 is K1
-%            ;
-%            J1 = Size,
-%            J2 = 1,
-%            K2 is K1
-%        )
-%    ;
-%        I1 = Size,
-%        I2 = 1,
-%        (
-%            J1 < Size,
-%            J2 is J1 + 1,
-%            K2 is K1
-%            ;
-%            J1 = Size,
-%            J2 = 1,
-%            K2 is K1 + 1
-%        )
-%    ),
-%    positiveTripleValues(Values,Size,I2,J2,K2,Rest).
-
 /*========================================================================
    Info
 ========================================================================*/

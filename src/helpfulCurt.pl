@@ -196,6 +196,7 @@ curtUpdate(Input,Moves,run):-
       \+ Readings=[que(_,_,_)|_],
       formatTime(Readings,NewReadings),
       consistentReadings(NewReadings,[]-ConsReadings,[]-Models),
+      operateModels(Models,NewModels),
       (
          ConsReadings=[],
          Moves=[contradiction]
@@ -211,11 +212,80 @@ curtUpdate(Input,Moves,run):-
          ),
          combine(ConsReadings,CombinedReadings), 
          updateReadings(CombinedReadings),
-         updateModels(Models)
+         updateModels(NewModels)
       )
    ).
 
 curtUpdate(_,[noparse],run).
+
+operateModels([Model],[NewModel]) :-
+    operateModel(Model,NewModel).
+
+operateModel(model(Domain,Interpretation),NewModel) :-
+    member(f(1,time,TimeDomain),Interpretation),
+    filterEntries(Interpretation,TimeDomain,TimeEntries),
+    length(TimeEntries,TELength),
+    length(TimeDomain,TDLength),
+    Excess is TELength - TDLength,
+    expandDomain(Domain,Excess,NewDomain),
+    stripOtherElements(Interpretation,NewDomain,NewTimeDomain),
+    distinguish(TimeEntries,NewTimeDomain,NewTE),
+    replaceTimeEntries(TimeEntries,NewTE,Interpretation,NewI),
+    reworkTime(NewTE,NewI,NewerI),
+    reworkEvent(NewTE,NewerI,NewestI),
+    NewModel = model(NewDomain,NewestI).
+
+reworkEvent(NewTE,Interpretation,NewI) :-
+
+stripOtherElements(Interpretation,FullDomain,TimeDomain) :-
+    member(f(1,time,OldTimeDomain),Interpretation),
+    findall(D,(
+        member(f(0,_,D),Interpretation),
+        \+ member(D,OldTimeDomain)
+    ),OtherDomain),
+    subtract(FullDomain,OtherDomain,TimeDomain).
+
+reworkTime(TimeEntries,Interpretation,[f(1,time,Times)|NewI]) :-
+    delete(Interpretation,f(1,time,_),NewI),
+    extractDomain(TimeEntries,Times).
+
+replaceTimeEntries(TE,NewTE,Interpretation,NewI) :-
+    subtract(Interpretation,TE,Intermediate),
+    append(Intermediate,NewTE,NewI).
+
+distinguish([],_,[]).
+
+distinguish([f(0,C,Element)|T],Domain,[f(0,C,Element)|NewT]) :-
+    member(Element,Domain),
+    delete(Domain,Element,NewDomain),
+    distinguish(T,NewDomain,NewT).
+
+distinguish([f(0,C,Element)|T],Domain,[f(0,C,AnotherE)|NewT]) :-
+    \+ member(Element,Domain),
+    member(AnotherE,Domain),
+    delete(Domain,AnotherE,NewDomain),
+    distinguish(T,NewDomain,NewT).
+
+extractDomain(Interpretation,Domain) :-
+    findall(X,member(f(0,_,X),Interpretation),Domain).
+
+expandDomain(D,Excess,NewD) :-
+    length(D,DLength),
+    NewLength is DLength + Excess,
+    findall(X,between(1,NewLength,X),Range),
+    range2domain(Range,NewD).
+
+range2domain([],[]).
+range2domain([N|Ns],[D|Ds]) :-
+    atom_number(A,N),
+    atom_concat('d',A,D),
+    range2domain(Ns,Ds).
+
+filterEntries(I,D,Output) :-
+    findall(f(0,C,(Element)),(
+        member(f(0,C,Element),I),
+        member(Element,D)
+    ),Output).
 
 formatTime([evt(movie,TimeA,TimeB)],[evt(movie,TimestampA,TimestampB)]) :-
     convertTime(TimeA,TimestampA),
@@ -272,23 +342,12 @@ consistentReadings([New|Readings],C1-C2,M1-M2):-
    readings(Old),
    (
       consistent(Old,New,Model), !,
-      %operateModel(New,Model,NewModel),
       NewModel = Model,
       consistentReadings(Readings,[New|C1]-C2,[NewModel|M1]-M2) 
    ;
       consistentReadings(Readings,C1-C2,M1-M2) 
    ).
 
-operateModel(evt(movie,A,B),_,NewModel):-
-    NewModel = model([d1,d2,d3],[
-        f(0,movie,d1),
-        f(0,A,d2),
-        f(0,B,d3),
-        f(3,evt,[(d1,d2,d3)]),
-        f(2,lt,[(d2,d3)])
-    ]).
-
-operateModel(Pred,Model,Model) :- \+ Pred = evt.
 
 
 /*========================================================================
