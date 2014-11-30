@@ -488,38 +488,58 @@ positivePairValues([0|Values],Size,I1,J1,Rest):-
 positiveTripleValues([],_,_,_,_,[]).
 
 positiveTripleValues([1|Values],Size,I1,J1,K1,[(X3,X2,X1)|Rest]):-
-	name(I1,Codes1),
-	name(X1,[100|Codes1]),
-	name(J1,Codes2),
-	name(X2,[100|Codes2]),
-	name(K1,Codes3),
-	name(X3,[100|Codes3]),
-	(
-	    I1 < Size,
-	    I2 is I1 + 1,
-	    J2 is J1,
-        K2 is K1
-	;   
-	    I1 = Size,
-	    I2 = 1,
-	    J2 is J1 + 1,
-        K2 is K1 + 1
-	),
-	positiveTripleValues(Values,Size,I2,J2,K2,Rest).
+    name(I1,Codes1),
+    name(X1,[100|Codes1]),
+    name(J1,Codes2),
+    name(X2,[100|Codes2]),
+    name(K1,Codes3),
+    name(X3,[100|Codes3]),
+    (
+        (I1 < Size, I2 is I1+1, J2 is J1, K2 is K1) ;
+        (I1 = Size, J1 < Size, I2 = 1, J2 is J1+1, K2 is K1) ;
+        (I1 = Size, J1 = Size, K1 < Size, I2 = 1, J2 = 1, K2 is K1+1) ;
+        (I1 = Size, J1 = Size, K1 = Size, I2 = 0, J2 = 0, K2 = 0)
+    ),
+    positiveTripleValues(Values,Size,I2,J2,K2,Rest).
 
 positiveTripleValues([0|Values],Size,I1,J1,K1,Rest):-
-	(
-	    I1 < Size, 
-	    I2 is I1 + 1,
-	    J2 is J1,
-        K2 is K1
-	;
-	    I1 = Size,
-	    I2 = 1,
-	    J2 is J1 + 1,
-        K2 is K1 + 1
-	),
-	positiveTripleValues(Values,Size,I2,J2,K2,Rest).
+    (
+        (I1 < Size, I2 is I1+1, J2 is J1, K2 is K1) ;
+        (I1 = Size, J1 < Size, I2 = 1, J2 is J1+1, K2 is K1) ;
+        (I1 = Size, J1 = Size, K1 < Size, I2 = 1, J2 = 1, K2 is K1+1) ;
+        (I1 = Size, J1 = Size, K1 = Size, I2 = 0, J2 = 0, K2 = 0)
+    ),
+    positiveTripleValues(Values,Size,I2,J2,K2,Rest).
+
+
+
+%positiveTripleValues([0|Values],Size,I1,J1,K1,Rest):-
+%    (
+%        I1 < Size, 
+%        I2 is I1 + 1,
+%        (
+%            J1 < Size,
+%            J2 is J1,
+%            K2 is K1
+%            ;
+%            J1 = Size,
+%            J2 = 1,
+%            K2 is K1
+%        )
+%    ;
+%        I1 = Size,
+%        I2 = 1,
+%        (
+%            J1 < Size,
+%            J2 is J1 + 1,
+%            K2 is K1
+%            ;
+%            J1 = Size,
+%            J2 = 1,
+%            K2 is K1 + 1
+%        )
+%    ),
+%    positiveTripleValues(Values,Size,I2,J2,K2,Rest).
 
 /*========================================================================
    Info
