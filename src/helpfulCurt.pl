@@ -229,13 +229,56 @@ operateModel(model(Domain,Interpretation),NewModel) :-
     Excess is TELength - TDLength,
     expandDomain(Domain,Excess,NewDomain),
     stripOtherElements(Interpretation,NewDomain,NewTimeDomain),
-    distinguish(TimeEntries,NewTimeDomain,NewTE),
+    associate(TimeEntries,NewTimeDomain,Association),
+    distinguish(TimeEntries,Association,NewTE),
     replaceTimeEntries(TimeEntries,NewTE,Interpretation,NewI),
     reworkTime(NewTE,NewI,NewerI),
-    reworkEvent(NewTE,NewerI,NewestI),
+    reworkEvent(NewerI,Association,NewestI),
     NewModel = model(NewDomain,NewestI).
 
-reworkEvent(NewTE,Interpretation,NewI) :-
+reworkEvent(Interpretation,Association,[f(3,evt,NewTriples)|IntermediateI]) :-
+    member(f(3,evt,Triples),Interpretation),
+    newTriples(Triples,Association,NewTriples),
+    delete(Interpretation,f(3,evt,Triples),IntermediateI).
+
+newTriples([],_,[]).
+newTriples([(T,A,B)|Ts],Association,[(T,A,B),(T,NA,NB)|NewTs]) :-
+    findall(NewA,
+        member([NewA,A,_],Association),
+    NewAs),
+    findall(NewB,
+        member([NewB,B,_],Association),
+    NewBs),
+    delete(NewAs,A,NewAs2),
+    delete(NewBs,B,NewBs2),
+    NewAs2 = [NA],
+    NewBs2 = [NB],
+    newTriples(Ts,Association,NewTs).
+newTriples([(T,A,B)|Ts],Association,[(T,A,B)|NewTs]) :-
+    findall(NewA,
+        member([NewA,A,_],Association),
+    NewAs),
+    findall(NewB,
+        member([NewB,B,_],Association),
+    NewBs),
+    delete(NewAs,A,NewAs2),
+    delete(NewBs,B,NewBs2),
+    \+ NewAs2 = [_],
+    \+ NewBs2 = [_],
+    newTriples(Ts,Association,NewTs).
+
+associate([],_,[]).
+
+associate([f(0,C,Element)|T],Domain,[[Element,Element,C]|NewT]) :-
+    member(Element,Domain),
+    delete(Domain,Element,NewDomain),
+    associate(T,NewDomain,NewT).
+
+associate([f(0,C,Element)|T],Domain,[[AnotherE,Element,C]|NewT]) :-
+    \+ member(Element,Domain),
+    member(AnotherE,Domain),
+    delete(Domain,AnotherE,NewDomain),
+    associate(T,NewDomain,NewT).
 
 stripOtherElements(Interpretation,FullDomain,TimeDomain) :-
     member(f(1,time,OldTimeDomain),Interpretation),
@@ -254,17 +297,9 @@ replaceTimeEntries(TE,NewTE,Interpretation,NewI) :-
     append(Intermediate,NewTE,NewI).
 
 distinguish([],_,[]).
-
-distinguish([f(0,C,Element)|T],Domain,[f(0,C,Element)|NewT]) :-
-    member(Element,Domain),
-    delete(Domain,Element,NewDomain),
-    distinguish(T,NewDomain,NewT).
-
-distinguish([f(0,C,Element)|T],Domain,[f(0,C,AnotherE)|NewT]) :-
-    \+ member(Element,Domain),
-    member(AnotherE,Domain),
-    delete(Domain,AnotherE,NewDomain),
-    distinguish(T,NewDomain,NewT).
+distinguish([f(0,C,E)|T],Assocs,[f(0,C,TE)|NewT]) :-
+    member([TE,E,C],Assocs),
+    distinguish(T,Assocs,NewT).
 
 extractDomain(Interpretation,Domain) :-
     findall(X,member(f(0,_,X),Interpretation),Domain).
