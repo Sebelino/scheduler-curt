@@ -203,7 +203,7 @@ curtUpdate(Input,Moves,run):-
       formatTime(Readings,NewReadings),
       operateReadings(NewReadings,NewerReadings),
       consistentReadings(NewerReadings,[]-ConsReadings,[]-Models),
-      operateModels(Models,NewModels),
+      NewModels = Models,
       (
          ConsReadings=[],
          Moves=[contradiction]
@@ -223,14 +223,50 @@ curtUpdate(Input,Moves,run):-
       )
    ).
 
+
+
 operateReadings([Reading],[NewReading]) :-
     operateReading(Reading,NewReading).
 
 operateReading(evt(T,A,B),and(evt(T,A,B),lt(A,B))) :-
-    lessThan(A,B).
+    models([]).
+operateReading(evt(T,A,B),NewReading) :-
+    models([model(_,I)]),
+    findall(C,(
+        member(f(0,C,Element),I),
+        member(f(1,time,Elements),I),
+        member(Element,Elements)
+    ),TimeStamps),
+    TimeStamps = TimeStamps,
+    lessThan(A,B),
+    combineTimes(TimeStamps,evt(T,A,B),NewReading).
 
 operateReading(evt(T,A,B),and(foo,not(foo))) :-
     \+ lessThan(A,B).
+
+combineTimes(OldTimes,evt(T,A,B),Reading) :-
+    crossproduct(OldTimes,[A,B],Pairs),
+    pairs2formulas(Pairs,Formulas),
+    formulas2conjunctions(Formulas,Tree),
+    R1 = and(evt(T,A,B),R2),
+    R2 = and(lt(A,B),R3),
+    R3 = and(all(X,imp(title(X),not(eq(X,A)))),R4),
+    R4 = and(all(X,imp(title(X),not(eq(X,B)))),Last),
+    Last = Tree,
+    Reading = R1.
+
+formulas2conjunctions([],all(X,eq(X,X))).
+formulas2conjunctions([H|T],and(H,Tree)) :-
+    formulas2conjunctions(T,Tree).
+
+pairs2formulas(Pairs,Formulas) :-
+    findall(all(X,imp(eq(X,E1),not(eq(X,E2)))), member([E1,E2],Pairs), Formulas).
+
+crossproduct(E1s,E2s,Product) :-
+    findall([E1,E2],(
+        member(E1,E1s),
+        member(E2,E2s)
+    ),Product).
 
 curtUpdate(_,[noparse],run).
 

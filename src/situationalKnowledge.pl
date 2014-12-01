@@ -42,8 +42,8 @@ situationalKnowledge(Axiom):-
 situationalKnowledge(Axiom):-
    Axiom = all(X,imp(time(X),not(title(X)))).
 
-situationalKnowledge(Axiom):-
-   Axiom = all(T,all(A,all(B,imp(evt(T,A,B),lt(A,B)).
+%situationalKnowledge(Axiom):-
+%   Axiom = all(T,all(A,all(B,imp(evt(T,A,B),lt(A,B))))).
 
-situationalKnowledge(Axiom):-
-   Axiom = all(A,all(B,imp(lt(A,B,not(lt(B,A))))))
+%situationalKnowledge(Axiom):-
+%   Axiom = all(A,all(B,imp(lt(A,B,not(lt(B,A)))))).
