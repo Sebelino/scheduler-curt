@@ -175,18 +175,32 @@ np([coord:no,num:sg,gap:[],sem:NP])-->
 /* Custom */
 
 eventspec([sem:Eventspec])--> 
-   evt([sem:Event]), 
-   prep([sem:From]), 
-   time([sem:TimeA]), 
-   prep([sem:To]), 
-   time([sem:TimeB]), 
-   {combine(eventspec:Eventspec,[evt:Event,prep:From,time:TimeA,prep:To,time:TimeB])}.
+    evt([sem:Event]), 
+    prep([sem:From]), 
+    time([sem:TimeA]), 
+    prep([sem:To]), 
+    time([sem:TimeB]), 
+    {combine(eventspec:Eventspec,[evt:Event,prep:From,time:TimeA,prep:To,time:TimeB])}.
+
+eventspec([sem:Eventspec])--> 
+    evt([sem:Event]), 
+    prep([sem:From]), 
+    time([sem:TimeA]), 
+    prep([sem:To]), 
+    time([sem:TimeB]), 
+    dayspec([sem:Dayspec]),
+    {combine(eventspec:Eventspec,[evt:Event,prep:From,time:TimeA,prep:To,time:TimeB,dayspec:Dayspec])}.
+
+dayspec([sem:Dayspec])-->
+    prep([sem:On]),
+    evt([sem:Weekday]),
+    {combine(dayspec:Dayspec,[prep:On,evt:Weekday])}.
 
 show([sem:Show])--> 
-   tv([inf:_,num:_,sem:TV]), 
-   adj([sem:Adj]), 
-   noun([sem:Noun]), 
-   {combine(show:Show,[tv:TV,adj:Adj,noun:Noun])}.
+    tv([inf:_,num:_,sem:TV]), 
+    adj([sem:Adj]), 
+    noun([sem:Noun]), 
+    {combine(show:Show,[tv:TV,adj:Adj,noun:Noun])}.
 
 
 /*========================================================================
