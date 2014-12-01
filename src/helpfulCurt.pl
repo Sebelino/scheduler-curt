@@ -52,7 +52,10 @@
                               list2string/2,
                               selectReadings/3]).
 
-:- use_module(library(julian),[form_time/1,form_time/2,month_number/2,compare_time/3]).
+:- use_module(library(julian),[form_time/1,
+                               form_time/2,
+                               julian_calendar_gregorian:month_number/2,
+                               compare_time/3]).
 
 /*========================================================================
    Dynamic Predicates
@@ -154,6 +157,40 @@ curtUpdate([show,my,appointments],[],run):-
         format('Curt: Your schedule contains no events.',[])
     ).
 
+curtUpdate(Input,Moves,run):-
+   kellerStorage(Input,Readings), !,
+   updateHistory(Input),
+   (
+      Readings=[que(X,R,S)|_],
+      models(OldModels),
+      answerQuestion(que(X,R,S),OldModels,Moves)
+   ;  
+      \+ Readings=[que(_,_,_)|_],
+      formatTime(Readings,NewReadings),
+      operateReadings(NewReadings,NewerReadings),
+      consistentReadings(NewerReadings,[]-ConsReadings,[]-Models),
+      NewModels = Models,
+      (
+         ConsReadings=[],
+         Moves=[contradiction]
+      ;
+         \+ ConsReadings=[],
+         informativeReadings(ConsReadings,[]-InfReadings),   
+         (
+            InfReadings=[],
+            Moves=[obvious]
+         ;  
+            \+ InfReadings=[],
+            Moves=[accept]
+         ),
+         combine(ConsReadings,CombinedReadings), 
+         updateReadings(CombinedReadings),
+         updateModels(NewModels)
+      )
+   ).
+
+curtUpdate(_,[noparse],run).
+
 showModel(model(_,Interpretation)):-
     member(f(3,evt,Events),Interpretation),
     showModel(Interpretation,Events).
@@ -195,37 +232,6 @@ capitalize(Lower,Upper) :-
 ourFormat2List(Our,T) :-
     atomic_list_concat(['t'|T],'_',Our).
 
-curtUpdate(Input,Moves,run):-
-   kellerStorage(Input,Readings), !,
-   updateHistory(Input),
-   (
-      Readings=[que(X,R,S)|_],
-      models(OldModels),
-      answerQuestion(que(X,R,S),OldModels,Moves)
-   ;  
-      \+ Readings=[que(_,_,_)|_],
-      formatTime(Readings,NewReadings),
-      operateReadings(NewReadings,NewerReadings),
-      consistentReadings(NewerReadings,[]-ConsReadings,[]-Models),
-      NewModels = Models,
-      (
-         ConsReadings=[],
-         Moves=[contradiction]
-      ;
-         \+ ConsReadings=[],
-         informativeReadings(ConsReadings,[]-InfReadings),   
-         (
-            InfReadings=[],
-            Moves=[obvious]
-         ;  
-            \+ InfReadings=[],
-            Moves=[accept]
-         ),
-         combine(ConsReadings,CombinedReadings), 
-         updateReadings(CombinedReadings),
-         updateModels(NewModels)
-      )
-   ).
 
 
 
@@ -236,7 +242,7 @@ operateReading(evt(T,A,B),and(evt(T,A,B),lt(A,B))) :-
     lessThan(A,B),
     models([]).
 
-operateReading(evt(T,A,B),and(foo,not(foo))) :-
+operateReading(evt(_,A,B),and(foo,not(foo))) :-
     \+ lessThan(A,B).
 
 operateReading(evt(T,A,B),NewReading) :-
@@ -280,8 +286,6 @@ crossproduct(E1s,E2s,Product) :-
         member(E1,E1s),
         member(E2,E2s)
     ),Product).
-
-curtUpdate(_,[noparse],run).
 
 operateModels([],[]).
 operateModels([Model],[NewModel]) :-
