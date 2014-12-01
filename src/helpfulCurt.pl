@@ -144,9 +144,15 @@ curtUpdate([history],[],run):- !,
    printRepresentations(H).
 
 
-curtUpdate([show,my,appointments],[],run):- !,
-   models([M]),
-   showModel(M).
+curtUpdate([show,my,appointments],[],run):-
+    (
+        models([M]),
+        showModel(M)
+    ) ;
+    (
+        models([]),
+        format('Curt: Your schedule contains no events.',[])
+    ).
 
 showModel(model(_,Interpretation)):-
     member(f(3,evt,[ (DEvent,DTimeA,DTimeB)]),Interpretation),
