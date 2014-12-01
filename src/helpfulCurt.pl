@@ -246,7 +246,8 @@ operateReading(evt(T,A,B),and(foo,not(foo))) :-
 
 combineTimes(OldTimes,evt(T,A,B),Reading) :-
     crossproduct(OldTimes,[A,B],Pairs),
-    pairs2formulas(Pairs,Formulas),
+    stripEqualPairs(Pairs,NewPairs),
+    pairs2formulas(NewPairs,Formulas),
     formulas2conjunctions(Formulas,Tree),
     R1 = and(evt(T,A,B),R2),
     R2 = and(lt(A,B),R3),
@@ -258,6 +259,12 @@ combineTimes(OldTimes,evt(T,A,B),Reading) :-
 formulas2conjunctions([],all(X,eq(X,X))).
 formulas2conjunctions([H|T],and(H,Tree)) :-
     formulas2conjunctions(T,Tree).
+
+stripEqualPairs(Pairs,NewPairs) :-
+    findall([E1,E2],(
+        member([E1,E2],Pairs),
+        \+ E1 = E2
+    ),NewPairs).
 
 pairs2formulas(Pairs,Formulas) :-
     findall(all(X,imp(eq(X,E1),not(eq(X,E2)))), member([E1,E2],Pairs), Formulas).
