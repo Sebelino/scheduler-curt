@@ -194,10 +194,10 @@ curtUpdate(Input,Moves,run):-
       answerQuestion(que(X,R,S),OldModels,Moves)
    ;  
       \+ Readings=[que(_,_,_)|_],
-      formatTime(Readings,[evt(T,A,B)]),
-      NewerReadings = [and(evt(T,A,B),lt(A,B),lt(B,A))],
+      formatTime(Readings,NewReadings),
+      operateReadings(NewReadings,NewerReadings),
       consistentReadings(NewerReadings,[]-ConsReadings,[]-Models),
-      (Model = [] ; operateModels(Models,NewModels)),
+      operateModels(Models,NewModels),
       (
          ConsReadings=[],
          Moves=[contradiction]
@@ -217,8 +217,18 @@ curtUpdate(Input,Moves,run):-
       )
    ).
 
+operateReadings([Reading],[NewReading]) :-
+    operateReading(Reading,NewReading).
+
+operateReading(evt(T,A,B),and(evt(T,A,B),lt(A,B))) :-
+    lessThan(A,B).
+
+operateReading(evt(T,A,B),and(foo,not(foo))) :-
+    \+ lessThan(A,B).
+
 curtUpdate(_,[noparse],run).
 
+operateModels([],[]).
 operateModels([Model],[NewModel]) :-
     operateModel(Model,NewModel).
 
