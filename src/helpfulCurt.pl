@@ -422,17 +422,18 @@ formatTime([Reading],[Reading]) :-
     compose(Reading,Sym,_),
     \+ Sym = evt.
 
-convertTime(MHour,TimeStamp) :-
-    addM(MHour,Hour),
+% '7pm' -> '2014_12_1_19_0'
+% '11:15am' -> '2014_12_1_11_15'
+convertTime(MTime,TimeStamp) :-
+    meridiem2clock(MTime,Hour,Minute),
     form_time([now,Y-Mo-D]),
-    form_time([now,_:_:_]),
     atom_number(YA,Y),
     atom_number(MoA,Mo),
     atom_number(DA,D),
-    atomic_list_concat(['t',YA,MoA,DA,Hour,'0'],'_',TimeStamp).
+    atomic_list_concat(['t',YA,MoA,DA,Hour,Minute],'_',TimeStamp).
 
 % '7pm' -> '19', '7am' -> '7'
-addM(MTime,Time) :-
+meridiem2clock(MTime,Hour,'0') :-
     atom_length(MTime,L),
     B is L-2,
     sub_atom(MTime,B,2,0,Trail),
@@ -440,7 +441,19 @@ addM(MTime,Time) :-
     sub_atom(MTime,0,_,2,HA),
     atom_number(HA,H),
     (Trail = 'am', N = H ; Trail = 'pm', N is H+12),
-    atom_number(Time,N).
+    atom_number(Hour,N), !.
+
+% '7:15pm' -> ('19','15')
+meridiem2clock(MTime,Hour,Minute) :-
+    atomic_list_concat([HA,MPart],':',MTime),
+    atom_length(MPart,L),
+    B is L-2,
+    sub_atom(MPart,B,2,0,Trail),
+    member(Trail,['am','pm']),
+    sub_atom(MPart,0,_,2,Minute),
+    atom_number(HA,H),
+    (Trail = 'am', N = H ; Trail = 'pm', N is H+12),
+    atom_number(Hour,N), !.
 
 stamp2time(Stamp,Time) :-
     atomic_list_concat([t,Y,Mo,D,H,Mi],'_',Stamp),
@@ -451,9 +464,6 @@ stamp2time(Stamp,Time) :-
     atomic_list_concat([Y,'-',PMo,'-',PD,'T',PH,':',PMi,':','00'],RFC),
     atom_string(RFC,SRFC),
     form_time(rfc3339(SRFC),Time).
-
-%formatTime([movie,from,'7am',to,'9am',on,friday],
-%    [movie,from,t2014_11_28_19_0_0,to,t2014_11_28_21_0_0,on,friday]).
 
 /*========================================================================
    Combine New Utterances with History

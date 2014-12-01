@@ -100,6 +100,9 @@ convertWord([Number|Rest1],[Number|Rest2]):-
    Number > 47, Number < 58, !,
    convertWord(Rest1,Rest2).
 
+convertWord([58|Rest1],[58|Rest2]):- !, % Colon
+   convertWord(Rest1,Rest2).
+
 convertWord([Weird|Rest1],Rest2):-
    (Weird < 97; Weird > 122), !,
    convertWord(Rest1,Rest2).
