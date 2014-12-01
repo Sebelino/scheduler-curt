@@ -155,7 +155,10 @@ curtUpdate([show,my,appointments],[],run):-
     ).
 
 showModel(model(_,Interpretation)):-
-    member(f(3,evt,[ (DEvent,DTimeA,DTimeB)]),Interpretation),
+    member(f(3,evt,Events),Interpretation),
+    showModel(Interpretation,Events).
+showModel(_,[]).
+showModel(Interpretation,[ (DEvent,DTimeA,DTimeB)|T]):-
     member(f(0,Event,DEvent),Interpretation),
     member(f(0,TimeA,DTimeA),Interpretation),
     member(f(0,TimeB,DTimeB),Interpretation),
@@ -163,7 +166,8 @@ showModel(model(_,Interpretation)):-
     timestamp2readable(TimeB,RTimeB),
     capitalize(Event,UEvent),
     atomic_list_concat(['*',UEvent,'from',RTimeA,'to',RTimeB],' ',Output),
-    format(Output,[]).
+    format(Output,[]),nl,
+    showModel(Interpretation,T).
 
 padNumber(Number,Number) :- atom_length(Number,2).
 padNumber(Number,PNumber) :-
@@ -229,7 +233,12 @@ operateReadings([Reading],[NewReading]) :-
     operateReading(Reading,NewReading).
 
 operateReading(evt(T,A,B),and(evt(T,A,B),lt(A,B))) :-
+    lessThan(A,B),
     models([]).
+
+operateReading(evt(T,A,B),and(foo,not(foo))) :-
+    \+ lessThan(A,B).
+
 operateReading(evt(T,A,B),NewReading) :-
     models([model(_,I)]),
     findall(C,(
@@ -240,9 +249,6 @@ operateReading(evt(T,A,B),NewReading) :-
     TimeStamps = TimeStamps,
     lessThan(A,B),
     combineTimes(TimeStamps,evt(T,A,B),NewReading).
-
-operateReading(evt(T,A,B),and(foo,not(foo))) :-
-    \+ lessThan(A,B).
 
 combineTimes(OldTimes,evt(T,A,B),Reading) :-
     crossproduct(OldTimes,[A,B],Pairs),
