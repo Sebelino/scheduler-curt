@@ -50,6 +50,10 @@ semLex(evt,M):-
    M = [symbol:Sym,
         sem:Sym].
 
+semLex(time,M):-
+   M = [symbol:Sym,
+        sem:Sym].
+
 semLex(iv,M):-
    M = [symbol:Sym,
         sem:[lam(X,Formula)]],

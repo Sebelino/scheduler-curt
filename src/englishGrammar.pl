@@ -177,10 +177,10 @@ np([coord:no,num:sg,gap:[],sem:NP])-->
 eventspec([sem:Eventspec])--> 
    evt([sem:Event]), 
    prep([sem:From]), 
-   evt([sem:TimeA]), 
+   time([sem:TimeA]), 
    prep([sem:To]), 
-   evt([sem:TimeB]), 
-   {combine(eventspec:Eventspec,[evt:Event,prep:From,evt:TimeA,prep:To,evt:TimeB])}.
+   time([sem:TimeB]), 
+   {combine(eventspec:Eventspec,[evt:Event,prep:From,time:TimeA,prep:To,time:TimeB])}.
 
 show([sem:Show])--> 
    tv([inf:_,num:_,sem:TV]), 
@@ -406,3 +406,8 @@ evt([sem:Sem])-->
    {lexEntry(evt,[symbol:Sym,syntax:Word])},
    Word,
    {semLex(evt,[symbol:Sym,sem:Sem])}.
+
+time([sem:Sem])--> 
+   {lexEntry(time,[symbol:Sym,syntax:Word])},
+   Word,
+   {semLex(time,[symbol:Sym,sem:Sem])}.

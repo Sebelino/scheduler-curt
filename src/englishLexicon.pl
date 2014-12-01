@@ -58,12 +58,12 @@ lexEntry(det,[syntax:[which],mood:int,type:wh]).
 lexEntry(evt,[symbol:movie,syntax:[movie]]).
 lexEntry(evt,[symbol:friday,syntax:[friday]]).
 
-lexEntry(evt,[symbol:'7am',syntax:['7am']]).
-lexEntry(evt,[symbol:'8am',syntax:['8am']]).
-lexEntry(evt,[symbol:'9am',syntax:['9am']]).
-lexEntry(evt,[symbol:'7pm',syntax:['7pm']]).
-lexEntry(evt,[symbol:'8pm',syntax:['8pm']]).
-lexEntry(evt,[symbol:'9pm',syntax:['9pm']]).
+lexEntry(time,[symbol:'7am',syntax:['7am']]).
+lexEntry(time,[symbol:'8am',syntax:['8am']]).
+lexEntry(time,[symbol:'9am',syntax:['9am']]).
+lexEntry(time,[symbol:'7pm',syntax:['7pm']]).
+lexEntry(time,[symbol:'8pm',syntax:['8pm']]).
+lexEntry(time,[symbol:'9pm',syntax:['9pm']]).
 
 lexEntry(adj,[symbol:my,syntax:[my]]).
 lexEntry(adj,[symbol:all,syntax:[all]]).
