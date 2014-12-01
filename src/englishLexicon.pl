@@ -21,6 +21,8 @@
 
 *************************************************************************/
 
+:- [times].
+
 /*
  * wh-embedding verbs
  * cf karttunen 77 for the complete classification according to 'type'
@@ -58,12 +60,8 @@ lexEntry(det,[syntax:[which],mood:int,type:wh]).
 lexEntry(evt,[symbol:movie,syntax:[movie]]).
 lexEntry(evt,[symbol:friday,syntax:[friday]]).
 
-lexEntry(time,[symbol:'7am',syntax:['7am']]).
-lexEntry(time,[symbol:'8am',syntax:['8am']]).
-lexEntry(time,[symbol:'9am',syntax:['9am']]).
-lexEntry(time,[symbol:'7pm',syntax:['7pm']]).
-lexEntry(time,[symbol:'8pm',syntax:['8pm']]).
-lexEntry(time,[symbol:'9pm',syntax:['9pm']]).
+lexEntry(time,[symbol:Syntax,syntax:[Syntax]]) :-
+    timeEntry(Syntax).
 
 lexEntry(adj,[symbol:my,syntax:[my]]).
 lexEntry(adj,[symbol:all,syntax:[all]]).

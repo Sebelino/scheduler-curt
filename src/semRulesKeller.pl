@@ -43,7 +43,7 @@ combine(t:Converted,[eventspec:Sem]):-
 combine(t:Converted,[show:Sem]):- 
    betaConvert(Sem,Converted).
 
-combine(eventspec:evt(A,C,E),[evt:A,prep:B,time:C,prep:D,time:E]).
+combine(eventspec:evt(A,C,E),[evt:A,prep:_,time:C,prep:_,time:E]).
 
 combine(show:show,[tv:_,adj:_,noun:_]).
 

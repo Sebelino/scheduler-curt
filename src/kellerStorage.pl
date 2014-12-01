@@ -42,6 +42,8 @@
 
 :- use_module(betaConversion,[betaConvert/2]).
 
+:- [times].
+
 :- [englishGrammar].
 
 :- [englishLexicon].
