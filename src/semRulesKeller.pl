@@ -54,6 +54,8 @@ combine(impspec:impspec(evt(Event,A,B),At),[evt:Event,time:A,time:B,time:At]).
 
 combine(dayspec:Weekday,[prep:_,evt:Weekday]).
 
+combine(dayspec:DayOffset,[prep:_,time:DayOffset]).
+
 combine(show:show,[tv:_,adj:_,noun:_]).
 
 combine(s:app(A,B),[s:A,s:B]).

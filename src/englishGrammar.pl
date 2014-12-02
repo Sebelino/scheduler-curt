@@ -203,6 +203,11 @@ dayspec([sem:Dayspec])-->
     evt([sem:Weekday]),
     {combine(dayspec:Dayspec,[prep:On,evt:Weekday])}.
 
+dayspec([sem:Dayspec])-->
+    prep([sem:In]),
+    time([sem:Dayoffset]),
+    {combine(dayspec:Dayspec,[prep:In,time:Dayoffset])}.
+
 impspec([sem:Impspec])--> 
     evt([sem:Event]),
     ['from'],

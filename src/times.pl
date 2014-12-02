@@ -1,6 +1,7 @@
 %
 
 :- module(times,[timeEntry/1,
+                 dayEntry/1,
                  formatTime/2,
                  lessThan/2,
                  timestamp2readable/2,
@@ -25,6 +26,10 @@ timeEntry(Time) :-
     member(Period,['am','pm']),
     atomic_list_concat([AtomHour,':',AtomMinute,Period],Time).
 
+dayEntry(Day) :-
+    between(1,30,Count),
+    atom_number(AtomCount,Count),
+    atom_concat(AtomCount,'days',Day).
 
 formatTime([evt(Activity,TimeA,TimeB)],[evt(Activity,TimestampA,TimestampB)]) :-
     convertTime(TimeA,TimestampA),
@@ -41,9 +46,14 @@ formatTime([Reading],[Reading]) :-
 convertTime(MTime,Dayspec,TimeStamp2) :-
     convertTime(MTime,TimeStamp1),
     form_time(today,Today),
-    between(1,7,NDays),
-    delta_time(Today,days(NDays),Weekday),
-    form_time([dow(Dayspec)],Weekday),
+    (
+        between(1,7,NDays),
+        delta_time(Today,days(NDays),Weekday)
+        ;
+        between(1,30,Offset),
+        delta_time(Today,days(Offset),Weekday)
+    ),
+    form_time([dow(Dayspec)],Weekday),	
     !,
     form_time([Weekday,Y-Mo-D]),
     atomic_list_concat([t,_,_,_,H,Mi],'_',TimeStamp1),

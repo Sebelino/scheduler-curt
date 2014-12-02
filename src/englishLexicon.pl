@@ -21,7 +21,7 @@
 
 *************************************************************************/
 
-:- use_module(times,[timeEntry/1]).
+:- use_module(times,[timeEntry/1,dayEntry/1]).
 
 /*
  * wh-embedding verbs
@@ -75,6 +75,9 @@ lexEntry(evt,[symbol:sunday,syntax:[sunday]]).
 
 lexEntry(time,[symbol:Syntax,syntax:[Syntax]]) :-
     timeEntry(Syntax).
+
+lexEntry(time,[symbol:Syntax,syntax:[Syntax]]) :-
+    dayEntry(Syntax).
 
 lexEntry(adj,[symbol:my,syntax:[my]]).
 lexEntry(adj,[symbol:all,syntax:[all]]).
@@ -279,7 +282,8 @@ lexEntry(cop,[pol:neg,syntax:[are,not],inf:fin,num:pl]).
 lexEntry(prep,[symbol:from,syntax:[from]]).
 lexEntry(prep,[symbol:to,syntax:[to]]).
 lexEntry(prep,[symbol:on,syntax:[on]]).
-
+lexEntry(prep,[symbol:after,syntax:[after]]).
+lexEntry(prep,[symbol:in,syntax:[in]]).
 
 /*========================================================================
    Adjectives
