@@ -170,10 +170,8 @@ curtUpdate(Input,Moves,run):-
       answerQuestion(que(X,R,S),OldModels,Moves)
    ;  
       \+ Readings=[que(_,_,_)|_],
-      %formatTime(Readings,NewReadings),
-      NewReadings = Readings,
-      operateReadings(NewReadings,NewerReadings),
-      consistentReadings(NewerReadings,[]-ConsReadings,[]-Models),
+      operateReadings(Readings,NewReadings),
+      consistentReadings(NewReadings,[]-ConsReadings,[]-Models),
       NewModels = Models,
       (
          ConsReadings=[],
