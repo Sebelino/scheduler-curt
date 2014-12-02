@@ -44,9 +44,10 @@ t([sem:T2])-->
    {combine(t:T1,[eventspec:Eventspec])},
    {formatTime([T1],[T2])}.
 
-t([sem:T])--> 
+t([sem:T2])--> 
    impspec([sem:Impspec]),
-   {combine(t:T,[impspec:Impspec])}.
+   {combine(t:T1,[impspec:Impspec])},
+   {formatTime([T1],[T2])}.
 
 t([sem:T])--> 
    show([sem:Show]),

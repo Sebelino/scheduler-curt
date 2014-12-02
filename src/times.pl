@@ -34,6 +34,10 @@ formatTime([evt(Activity,TimeA,TimeB,Dayspec)],[evt(Activity,TimestampA,Timestam
     convertTime(TimeA,Dayspec,TimestampA),
     convertTime(TimeB,Dayspec,TimestampB).
 
+formatTime([impspec(Eventspec,Time)],[impspec(FormattedEventspec,Timestamp)]) :-
+    formatTime([Eventspec],[FormattedEventspec]),
+    convertTime(Time,Timestamp).
+
 formatTime([Reading],[Reading]) :-
     compose(Reading,Sym,_),
     \+ Sym = evt.

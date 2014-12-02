@@ -172,7 +172,6 @@ curtUpdate(Input,Moves,run):-
       \+ Readings=[que(_,_,_)|_],
       operateReadings(Readings,NewReadings),
       consistentReadings(NewReadings,[]-ConsReadings,[]-Models),
-      NewModels = Models,
       (
          ConsReadings=[],
          Moves=[contradiction]
@@ -188,7 +187,7 @@ curtUpdate(Input,Moves,run):-
          ),
          combine(ConsReadings,CombinedReadings), 
          updateReadings(CombinedReadings),
-         updateModels(NewModels)
+         updateModels(Models)
       )
    ).
 
@@ -229,6 +228,14 @@ operateReading(evt(T,A,B),NewReading) :-
     TimeStamps = TimeStamps,
     lessThan(A,B),
     combineTimes(TimeStamps,evt(T,A,B),NewReading).
+
+operateReading(impspec(evt(T,A,B),AtTime),NewReading) :-
+    %operateReading(Eventspec,InnerReading),
+    NewReading = and(time(AtTime),
+        imp(some(T,some(A,some(B,and(event(T,A,B),and(lt(A,AtTime),lt(AtTime,B)))))),
+            event(T,A,B)
+        )
+    ).
 
 combineTimes(OldTimes,evt(T,A,B),Reading) :-
     crossproduct(OldTimes,[A,B],Pairs),
