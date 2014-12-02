@@ -5,6 +5,7 @@
                  lessThan/2]).
 :- use_module(library(julian),[form_time/1,
                                form_time/2,
+                               delta_time/3,
                                julian_calendar_gregorian:month_number/2,
                                compare_time/3]).
 
@@ -27,9 +28,27 @@ formatTime([evt(Activity,TimeA,TimeB)],[evt(Activity,TimestampA,TimestampB)]) :-
     convertTime(TimeA,TimestampA),
     convertTime(TimeB,TimestampB).
 
+formatTime([evt(Activity,TimeA,TimeB,Dayspec)],[evt(Activity,TimestampA,TimestampB)]) :-
+    convertTime(TimeA,Dayspec,TimestampA),
+    convertTime(TimeB,Dayspec,TimestampB).
+
 formatTime([Reading],[Reading]) :-
     compose(Reading,Sym,_),
     \+ Sym = evt.
+
+convertTime(MTime,Dayspec,TimeStamp2) :-
+    convertTime(MTime,TimeStamp1),
+    form_time(today,Today),
+    between(1,7,NDays),
+    delta_time(Today,days(NDays),Weekday),
+    form_time([dow(Dayspec)],Weekday),
+    !,
+    form_time([Weekday,Y-Mo-D]),
+    atomic_list_concat([t,_,_,_,H,Mi],'_',TimeStamp1),
+    atom_number(YA,Y),
+    atom_number(MoA,Mo),
+    atom_number(DA,D),
+    atomic_list_concat([t,YA,MoA,DA,H,Mi],'_',TimeStamp2).
 
 % '7pm' -> '2014_12_1_19_0'
 % '11:15am' -> '2014_12_1_11_15'
@@ -39,7 +58,8 @@ convertTime(MTime,TimeStamp) :-
     atom_number(YA,Y),
     atom_number(MoA,Mo),
     atom_number(DA,D),
-    atomic_list_concat(['t',YA,MoA,DA,Hour,Minute],'_',TimeStamp).
+    atomic_list_concat([t,YA,MoA,DA,Hour,Minute],'_',TimeStamp).
+
 
 % '7pm' -> '19', '7am' -> '7'
 meridiem2clock(MTime,Hour,'0') :-

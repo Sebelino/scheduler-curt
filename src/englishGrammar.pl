@@ -183,7 +183,8 @@ eventspec([sem:Eventspec])-->
     time([sem:TimeA]), 
     prep([sem:To]), 
     time([sem:TimeB]), 
-    {combine(eventspec:Eventspec,[evt:Event,prep:From,time:TimeA,prep:To,time:TimeB])}.
+    dayspec([sem:Dayspec]),
+    {combine(eventspec:Eventspec,[evt:Event,prep:From,time:TimeA,prep:To,time:TimeB,dayspec:Dayspec])}.
 
 eventspec([sem:Eventspec])--> 
     evt([sem:Event]), 
@@ -191,8 +192,7 @@ eventspec([sem:Eventspec])-->
     time([sem:TimeA]), 
     prep([sem:To]), 
     time([sem:TimeB]), 
-    dayspec([sem:Dayspec]),
-    {combine(eventspec:Eventspec,[evt:Event,prep:From,time:TimeA,prep:To,time:TimeB,dayspec:Dayspec])}.
+    {combine(eventspec:Eventspec,[evt:Event,prep:From,time:TimeA,prep:To,time:TimeB])}.
 
 dayspec([sem:Dayspec])-->
     prep([sem:On]),

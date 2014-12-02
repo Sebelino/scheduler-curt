@@ -43,9 +43,9 @@ combine(t:Converted,[eventspec:Sem]):-
 combine(t:Converted,[show:Sem]):- 
    betaConvert(Sem,Converted).
 
-combine(eventspec:evt(Event,A,B),[evt:Event,prep:_,time:A,prep:_,time:B]).
-
 combine(eventspec:evt(Event,A,B,Day),[evt:Event,prep:_,time:A,prep:_,time:B,dayspec:Day]).
+
+combine(eventspec:evt(Event,A,B),[evt:Event,prep:_,time:A,prep:_,time:B]).
 
 combine(dayspec:Weekday,[prep:_,evt:Weekday]).
 

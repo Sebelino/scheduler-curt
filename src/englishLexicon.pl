@@ -65,7 +65,13 @@ lexEntry(evt,[symbol:breakfast,syntax:[breakfast]]).
 lexEntry(evt,[symbol:lunch,syntax:[lunch]]).
 lexEntry(evt,[symbol:dinner,syntax:[dinner]]).
 
+lexEntry(evt,[symbol:monday,syntax:[monday]]).
+lexEntry(evt,[symbol:tuesday,syntax:[tuesday]]).
+lexEntry(evt,[symbol:wednesday,syntax:[wednesday]]).
+lexEntry(evt,[symbol:thursday,syntax:[thursday]]).
 lexEntry(evt,[symbol:friday,syntax:[friday]]).
+lexEntry(evt,[symbol:saturday,syntax:[saturday]]).
+lexEntry(evt,[symbol:sunday,syntax:[sunday]]).
 
 lexEntry(time,[symbol:Syntax,syntax:[Syntax]]) :-
     timeEntry(Syntax).
