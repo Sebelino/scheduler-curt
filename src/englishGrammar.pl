@@ -45,6 +45,10 @@ t([sem:T2])-->
    {formatTime([T1],[T2])}.
 
 t([sem:T])--> 
+   impspec([sem:Impspec]),
+   {combine(t:T,[impspec:Impspec])}.
+
+t([sem:T])--> 
    show([sem:Show]),
    {combine(t:T,[show:Show])}.
 
@@ -198,6 +202,17 @@ dayspec([sem:Dayspec])-->
     prep([sem:On]),
     evt([sem:Weekday]),
     {combine(dayspec:Dayspec,[prep:On,evt:Weekday])}.
+
+impspec([sem:Impspec])--> 
+    evt([sem:Event]),
+    ['from'],
+    time([sem:TimeA]), 
+    ['to'],
+    time([sem:TimeB]), 
+    ['if'],
+    time([sem:AtTime]), 
+    ['event'], 
+    {combine(impspec:Impspec,[evt:Event,time:TimeA,time:TimeB,time:AtTime])}.
 
 show([sem:Show])--> 
     tv([inf:_,num:_,sem:TV]), 
