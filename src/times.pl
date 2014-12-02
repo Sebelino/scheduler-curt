@@ -49,7 +49,7 @@ meridiem2clock(MTime,Hour,'0') :-
     member(Trail,['am','pm']),
     sub_atom(MTime,0,_,2,HA),
     atom_number(HA,H),
-    (Trail = 'am', N = H ; Trail = 'pm', N is H+12),
+    (Trail = 'am', (H < 12, N = H ; H = 12, N = 0) ; Trail = 'pm', (H < 12, N is H+12 ; H = 12, N = H)),
     atom_number(Hour,N), !.
 
 % '7:15pm' -> ('19','15')
@@ -61,7 +61,7 @@ meridiem2clock(MTime,Hour,Minute) :-
     member(Trail,['am','pm']),
     sub_atom(MPart,0,_,2,Minute),
     atom_number(HA,H),
-    (Trail = 'am', N = H ; Trail = 'pm', N is H+12),
+    (Trail = 'am', (H < 12, N = H ; H = 12, N = 0) ; Trail = 'pm', (H < 12, N is H+12 ; H = 12, N = H),
     atom_number(Hour,N), !.
 
 stamp2time(Stamp,Time) :-
@@ -96,3 +96,14 @@ timestamp2readable(Stamp,Readable) :-
     capitalize(RMo,UMo),
     atomic_list_concat([D,Y],', ',DY),
     atomic_list_concat([T,UMo,DY],' ',Readable).
+
+ourFormat2List(Our,T) :-
+    atomic_list_concat(['t'|T],'_',Our).
+
+
+% november -> 'November'
+capitalize(Lower,Upper) :-
+    atom_codes(Lower,[H|T]),
+    to_upper(H,UpperH),
+    atom_codes(Upper,[UpperH|T]).
+

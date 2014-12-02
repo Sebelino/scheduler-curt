@@ -57,7 +57,9 @@
                                julian_calendar_gregorian:month_number/2,
                                compare_time/3]).
 
-:- use_module(times,[lessThan/2]).
+:- use_module(times,[lessThan/2,
+                     timestamp2readable/2,
+                     capitalize/2]).
 
 /*========================================================================
    Dynamic Predicates
@@ -208,19 +210,6 @@ showModel(Interpretation,[ (DEvent,DTimeA,DTimeB)|T]):-
     atomic_list_concat(['*',UEvent,'from',RTimeA,'to',RTimeB],' ',Output),
     format(Output,[]),nl,
     showModel(Interpretation,T).
-
-
-% november -> 'November'
-capitalize(Lower,Upper) :-
-    atom_codes(Lower,[H|T]),
-    to_upper(H,UpperH),
-    atom_codes(Upper,[UpperH|T]).
-
-ourFormat2List(Our,T) :-
-    atomic_list_concat(['t'|T],'_',Our).
-
-
-
 
 operateReadings([Reading],[NewReading]) :-
     operateReading(Reading,NewReading).
