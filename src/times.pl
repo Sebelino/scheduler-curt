@@ -5,7 +5,7 @@
                  formatTime/2,
                  lessThan/2,
                  timestamp2readable/2,
-                 capitalize/2]).
+                 capitalize/2,
                  lessThan/2]).
 
 :- use_module(library(julian),[form_time/1,
@@ -52,16 +52,26 @@ formatTime([Reading],[Reading]) :-
 convertTime(MTime,Dayspec,TimeStamp2) :-
     convertTime(MTime,TimeStamp1),
     form_time(today,Today),
-    (
-        between(1,7,NDays),
-        delta_time(Today,days(NDays),Weekday)
-        ;
-        between(1,30,Offset),
-        delta_time(Today,days(Offset),Weekday)
-    ),
+    between(1,7,NDays),
+    delta_time(Today,days(NDays),Weekday),
     form_time([dow(Dayspec)],Weekday),	
     !,
     form_time([Weekday,Y-Mo-D]),
+    atomic_list_concat([t,_,_,_,H,Mi],'_',TimeStamp1),
+    atom_number(YA,Y),
+    atom_number(MoA,Mo),
+    atom_number(DA,D),
+    atomic_list_concat([t,YA,MoA,DA,H,Mi],'_',TimeStamp2).
+
+convertTime(MTime,Dayspec,TimeStamp2) :-
+    convertTime(MTime,TimeStamp1),
+    form_time(today,Today),
+    atom_length(Dayspec,ALen),
+    Len is ALen-4,
+    After is ALen-1,
+    sub_atom(Dayspec,0,Len,After,AtomOffset),
+    atom_number(AtomOffset,Offset),
+    delta_time(Today,days(Offset),Y-Mo-D),
     atomic_list_concat([t,_,_,_,H,Mi],'_',TimeStamp1),
     atom_number(YA,Y),
     atom_number(MoA,Mo),
