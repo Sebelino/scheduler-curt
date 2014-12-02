@@ -204,15 +204,11 @@ dayspec([sem:Dayspec])-->
     {combine(dayspec:Dayspec,[prep:On,evt:Weekday])}.
 
 impspec([sem:Impspec])--> 
-    evt([sem:Event]),
-    ['from'],
-    time([sem:TimeA]), 
-    ['to'],
-    time([sem:TimeB]), 
+    eventspec([sem:Eventspec]),
     ['if'],
     time([sem:AtTime]), 
     ['event'], 
-    {combine(impspec:Impspec,[evt:Event,time:TimeA,time:TimeB,time:AtTime])}.
+    {combine(impspec:Impspec,[eventspec:Eventspec,time:AtTime])}.
 
 show([sem:Show])--> 
     tv([inf:_,num:_,sem:TV]), 
