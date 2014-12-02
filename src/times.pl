@@ -83,7 +83,7 @@ meridiem2clock(MTime,Hour,Minute) :-
     member(Trail,['am','pm']),
     sub_atom(MPart,0,_,2,Minute),
     atom_number(HA,H),
-    (Trail = 'am', (H < 12, N = H ; H = 12, N = 0) ; Trail = 'pm', (H < 12, N is H+12 ; H = 12, N = H),
+    (Trail = 'am', (H < 12, N = H ; H = 12, N = 0) ; Trail = 'pm', (H < 12, N is H+12 ; H = 12, N = H)),
     atom_number(Hour,N), !.
 
 stamp2time(Stamp,Time) :-

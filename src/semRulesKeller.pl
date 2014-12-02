@@ -40,12 +40,17 @@ combine(t:Converted,[np:Sem]):-
 combine(t:Converted,[eventspec:Sem]):- 
    betaConvert(Sem,Converted).
 
+combine(t:Converted,[impspec:Sem]):- 
+   betaConvert(Sem,Converted).
+
 combine(t:Converted,[show:Sem]):- 
    betaConvert(Sem,Converted).
 
 combine(eventspec:evt(Event,A,B,Day),[evt:Event,prep:_,time:A,prep:_,time:B,dayspec:Day]).
 
 combine(eventspec:evt(Event,A,B),[evt:Event,prep:_,time:A,prep:_,time:B]).
+
+combine(impspec:impspec(evt(Event,A,B),At),[evt:Event,time:A,time:B,time:At]).
 
 combine(dayspec:Weekday,[prep:_,evt:Weekday]).
 
