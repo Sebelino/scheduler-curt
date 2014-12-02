@@ -25,6 +25,8 @@
    Texts
 ========================================================================*/
 
+:- use_module(times,[formatTime/2]).
+
 t([sem:T])--> 
    s([coord:no,sem:S]),
    {combine(t:T,[s:S])}.
@@ -37,9 +39,10 @@ t([sem:T])-->
    np([coord:_,num:_,gap:_,sem:NP]),
    {combine(t:T,[np:NP])}.
 
-t([sem:T])--> 
+t([sem:T2])--> 
    eventspec([sem:Eventspec]),
-   {combine(t:T,[eventspec:Eventspec])}.
+   {combine(t:T1,[eventspec:Eventspec])},
+   {formatTime([T1],[T2])}.
 
 t([sem:T])--> 
    show([sem:Show]),
