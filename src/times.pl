@@ -78,6 +78,24 @@ convertTime(MTime,Dayspec,TimeStamp2) :-
     atom_number(DA,D),
     atomic_list_concat([t,YA,MoA,DA,H,Mi],'_',TimeStamp2).
 
+convertTime(MTime,Dayspec,TimeStamp2) :-
+    convertTime(MTime,TimeStamp1),
+    form_time(today,Today),
+    mapDayToOffset(Dayspec,Offset),
+    delta_time(Today,days(Offset),Y-Mo-D),
+    atomic_list_concat([t,_,_,_,H,Mi],'_',TimeStamp1),
+    atom_number(YA,Y),
+    atom_number(MoA,Mo),
+    atom_number(DA,D),
+    atomic_list_concat([t,YA,MoA,DA,H,Mi],'_',TimeStamp2).
+
+mapDayToOffset(Dayspec,Offset) :-
+    Dayspec = 'tomorrow',
+    Offset = 0
+    ;
+    Dayspec = 'nextweek',
+    Offset = 6.
+
 % '7pm' -> '2014_12_1_19_0'
 % '11:15am' -> '2014_12_1_11_15'
 convertTime(MTime,TimeStamp) :-
