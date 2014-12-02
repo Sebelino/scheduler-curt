@@ -6,6 +6,8 @@
                  lessThan/2,
                  timestamp2readable/2,
                  capitalize/2]).
+                 lessThan/2]).
+
 :- use_module(library(julian),[form_time/1,
                                form_time/2,
                                delta_time/3,
@@ -38,6 +40,10 @@ formatTime([evt(Activity,TimeA,TimeB)],[evt(Activity,TimestampA,TimestampB)]) :-
 formatTime([evt(Activity,TimeA,TimeB,Dayspec)],[evt(Activity,TimestampA,TimestampB)]) :-
     convertTime(TimeA,Dayspec,TimestampA),
     convertTime(TimeB,Dayspec,TimestampB).
+
+formatTime([impspec(Eventspec,Time)],[impspec(FormattedEventspec,Timestamp)]) :-
+    formatTime([Eventspec],[FormattedEventspec]),
+    convertTime(Time,Timestamp).
 
 formatTime([Reading],[Reading]) :-
     compose(Reading,Sym,_),

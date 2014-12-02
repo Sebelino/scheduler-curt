@@ -50,7 +50,7 @@ combine(eventspec:evt(Event,A,B,Day),[evt:Event,prep:_,time:A,prep:_,time:B,days
 
 combine(eventspec:evt(Event,A,B),[evt:Event,prep:_,time:A,prep:_,time:B]).
 
-combine(impspec:impspec(evt(Event,A,B),At),[evt:Event,time:A,time:B,time:At]).
+combine(impspec:impspec(Eventspec,At),[eventspec:Eventspec,time:At]).
 
 combine(dayspec:Weekday,[prep:_,evt:Weekday]).
 

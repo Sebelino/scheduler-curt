@@ -44,9 +44,10 @@ t([sem:T2])-->
    {combine(t:T1,[eventspec:Eventspec])},
    {formatTime([T1],[T2])}.
 
-t([sem:T])--> 
+t([sem:T2])--> 
    impspec([sem:Impspec]),
-   {combine(t:T,[impspec:Impspec])}.
+   {combine(t:T1,[impspec:Impspec])},
+   {formatTime([T1],[T2])}.
 
 t([sem:T])--> 
    show([sem:Show]),
@@ -209,15 +210,11 @@ dayspec([sem:Dayspec])-->
     {combine(dayspec:Dayspec,[prep:In,time:Dayoffset])}.
 
 impspec([sem:Impspec])--> 
-    evt([sem:Event]),
-    ['from'],
-    time([sem:TimeA]), 
-    ['to'],
-    time([sem:TimeB]), 
+    eventspec([sem:Eventspec]),
     ['if'],
     time([sem:AtTime]), 
     ['event'], 
-    {combine(impspec:Impspec,[evt:Event,time:TimeA,time:TimeB,time:AtTime])}.
+    {combine(impspec:Impspec,[eventspec:Eventspec,time:AtTime])}.
 
 show([sem:Show])--> 
     tv([inf:_,num:_,sem:TV]), 
