@@ -5,7 +5,7 @@
                  formatTime/2,
                  lessThan/2,
                  timestamp2readable/2,
-                 capitalize/2]).
+                 capitalize/2,
                  lessThan/2]).
 
 :- use_module(library(julian),[form_time/1,
