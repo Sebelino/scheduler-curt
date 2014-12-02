@@ -58,6 +58,13 @@ lexEntry(det,[syntax:[which],mood:int,type:wh]).
 ========================================================================*/
 
 lexEntry(evt,[symbol:movie,syntax:[movie]]).
+lexEntry(evt,[symbol:class,syntax:[class]]).
+lexEntry(evt,[symbol:meeting,syntax:[meeting]]).
+lexEntry(evt,[symbol:exercise,syntax:[exercise]]).
+lexEntry(evt,[symbol:breakfast,syntax:[breakfast]]).
+lexEntry(evt,[symbol:lunch,syntax:[lunch]]).
+lexEntry(evt,[symbol:dinner,syntax:[dinner]]).
+
 lexEntry(evt,[symbol:friday,syntax:[friday]]).
 
 lexEntry(time,[symbol:Syntax,syntax:[Syntax]]) :-

@@ -23,7 +23,7 @@ timeEntry(Time) :-
     atomic_list_concat([AtomHour,':',AtomMinute,Period],Time).
 
 
-formatTime([evt(movie,TimeA,TimeB)],[evt(movie,TimestampA,TimestampB)]) :-
+formatTime([evt(Activity,TimeA,TimeB)],[evt(Activity,TimestampA,TimestampB)]) :-
     convertTime(TimeA,TimestampA),
     convertTime(TimeB,TimestampB).
 
