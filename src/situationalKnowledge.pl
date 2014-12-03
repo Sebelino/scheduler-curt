@@ -21,29 +21,85 @@
 
 *************************************************************************/
 
-:- module(situationalKnowledge,[situationalKnowledge/1]).
+:- module(situationalKnowledge,[situationalKnowledge/1,pairs2formulas/3,formulas2conjunctions/2]).
 
 :- dynamic situationalKnowledge/1.
+
+:- use_module(helpfulCurt,[currentTimes/1,crossproduct/3]).
+:- use_module(comsemPredicates,[compose/3]).
+
+formulas2conjunctions([],and(foo,not(foo))).
+formulas2conjunctions([F],F).
+formulas2conjunctions([H|T],and(H,Tree)) :-
+    formulas2conjunctions(T,Tree).
+
+% Wrap a context for a formula around every element in the list.
+% [a,b],and(x,Var) -> [and(x,a),and(x,b)]
+list2formulas(List,map(Var,Context),Formulas) :-
+    findall(Formula,(
+        member(E,List),
+        substitute(Var,E,Context,Formula)
+    ),Formulas).
+
+pairs2formulas(Pairs,map(Var1,Var2,Context),Formulas) :-
+    term_to_atom(Context,ContextAtom),
+    findall(Formula,(
+        member([E1,E2],Pairs),
+        replace(Var1,E1,ContextAtom,NewContextAtom),
+        replace(Var2,E2,NewContextAtom,NewerContextAtom),
+        term_to_atom(Formula,NewerContextAtom)
+    ),Formulas).
+
+% String replacement.
+replace(Var,E,Atom,NewAtom) :-
+    atomic_list_concat(Parts,Var,Atom),
+    atomic_list_concat(Parts,E,NewAtom).
+
+% Compound term substitution.
+substitute(Var,E,Term,Term) :-
+    simple(Term),
+    Var == Term,
+    E == Term, !.
+substitute(X,_,Term,Term) :-
+    simple(Term),
+    \+ X == Term, !.
+substitute(X,E,Term,NewTerm) :-
+    compose(Term,Symbol,ArgList),
+    findall(NewArg,(
+        member(Arg,ArgList),
+        substitute(X,E,Arg,NewArg)
+    ),NewArgList),
+    compose(NewTerm,Symbol,NewArgList).
 
 /*========================================================================
    Axioms for Situational Knowledge
 ========================================================================*/
 
-% There are at least two different cars
-
+% For all events, start time != end time.
 situationalKnowledge(Axiom):-
-   Axiom = all(T,all(A,all(B,imp(evt(T,A,B),
-   and(time(A),and(time(B),and(title(T),not(eq(A,B)))))
-   )))).
+    Axiom = all(T,all(A,all(B,imp(evt(T,A,B),
+    and(time(A),and(time(B),and(title(T),not(eq(A,B)))))
+    )))).
 
+% Titles are not times.
 situationalKnowledge(Axiom):-
-   Axiom = all(X,imp(title(X),not(time(X)))).
+    Axiom = all(X,imp(title(X),not(time(X)))).
 
+% Times are not titles.
 situationalKnowledge(Axiom):-
-   Axiom = all(X,imp(time(X),not(title(X)))).
+    Axiom = all(X,imp(time(X),not(title(X)))).
+
+%% Two different times cannot be equal.
+%situationalKnowledge(Axiom):-
+%    currentTimes(Times),
+%    crossproduct(Times,Times,Pairs),
+%    Context = all(X,imp(and(time(X),and(eq(X,time1),eq(X,time2))),eq(time1,time2))),
+%    pairs2formulas(Pairs,map(time1,time2,Context),Formulas),
+%    formulas2conjunctions(Formulas,Tree),
+%    Axiom = Tree.
 
 %situationalKnowledge(Axiom):-
-%   Axiom = all(T,all(A,all(B,imp(evt(T,A,B),lt(A,B))))).
+%    Axiom = all(T,all(A,all(B,imp(evt(T,A,B),lt(A,B))))).
 
 %situationalKnowledge(Axiom):-
-%   Axiom = all(A,all(B,imp(lt(A,B,not(lt(B,A)))))).
+%    Axiom = all(A,all(B,imp(lt(A,B,not(lt(B,A)))))).

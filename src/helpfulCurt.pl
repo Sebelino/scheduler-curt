@@ -21,7 +21,7 @@
 
 *************************************************************************/
 
-:- module(curt,[curt/0,infix/0,prefix/0]).
+:- module(curt,[curt/0,infix/0,prefix/0,currentTimes/1,crossproduct/3]).
 
 :- use_module(callInference,[callTP/3,
                              callTPandMB/6]).
@@ -60,6 +60,9 @@
 :- use_module(times,[lessThan/2,
                      timestamp2readable/2,
                      capitalize/2]).
+
+:- use_module(situationalKnowledge,[pairs2formulas/3,formulas2conjunctions/2]).
+
 
 /*========================================================================
    Dynamic Predicates
@@ -219,28 +222,39 @@ operateReading(evt(_,A,B),and(foo,not(foo))) :-
     \+ lessThan(A,B).
 
 operateReading(evt(T,A,B),NewReading) :-
+    currentTimes(Timestamps),
+    lessThan(A,B),
+    combineTimes(Timestamps,evt(T,A,B),NewReading).
+
+operateReading(impspec(evt(Title,From,To),AtTime),Reading) :-
+    Formulas = [
+        title(Title),
+        time(From),
+        time(To),
+        time(AtTime),
+        impspec(Title,From,To,AtTime)
+    ],
+    formulas2conjunctions(Formulas,Conjunctions),
+    Reading = Conjunctions.
+
+context2conjunctions(X,Y,map(Var1,Var2,Context),Reading):-
+    crossproduct(X,Y,Pairs),
+    pairs2formulas(Pairs,map(Var1,Var2,Context),Formulas),
+    formulas2conjunctions(Formulas,Reading).
+
+currentTimes([]) :- models([]).
+currentTimes(Timestamps) :-
     models([model(_,I)]),
     findall(C,(
         member(f(0,C,Element),I),
         member(f(1,time,Elements),I),
         member(Element,Elements)
-    ),TimeStamps),
-    TimeStamps = TimeStamps,
-    lessThan(A,B),
-    combineTimes(TimeStamps,evt(T,A,B),NewReading).
-
-operateReading(impspec(evt(T,A,B),AtTime),NewReading) :-
-    %operateReading(Eventspec,InnerReading),
-    NewReading = and(time(AtTime),
-        imp(some(T,some(A,some(B,and(event(T,A,B),and(lt(A,AtTime),lt(AtTime,B)))))),
-            event(T,A,B)
-        )
-    ).
+    ),Timestamps).
 
 combineTimes(OldTimes,evt(T,A,B),Reading) :-
     crossproduct(OldTimes,[A,B],Pairs),
     stripEqualPairs(Pairs,NewPairs),
-    pairs2formulas(NewPairs,Formulas),
+    pairs2formulas(NewPairs,map(var1,var2,all(X,imp(eq(X,var1),not(eq(X,var2))))),Formulas),
     formulas2conjunctions(Formulas,Tree),
     R1 = and(evt(T,A,B),R2),
     R2 = and(lt(A,B),R3),
@@ -249,18 +263,11 @@ combineTimes(OldTimes,evt(T,A,B),Reading) :-
     Last = Tree,
     Reading = R1.
 
-formulas2conjunctions([],all(X,eq(X,X))).
-formulas2conjunctions([H|T],and(H,Tree)) :-
-    formulas2conjunctions(T,Tree).
-
 stripEqualPairs(Pairs,NewPairs) :-
     findall([E1,E2],(
         member([E1,E2],Pairs),
         \+ E1 = E2
     ),NewPairs).
-
-pairs2formulas(Pairs,Formulas) :-
-    findall(all(X,imp(eq(X,E1),not(eq(X,E2)))), member([E1,E2],Pairs), Formulas).
 
 crossproduct(E1s,E2s,Product) :-
     findall([E1,E2],(

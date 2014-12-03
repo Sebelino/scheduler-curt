@@ -73,12 +73,12 @@ backgroundKnowledge(Formula1,Symbols1,Formula3):-
 
 computeBackgroundKnowledge(Symbols,Formula):-
    retractall(knowledge(_)),
-   findall(_,(lexicalKnowledge(Symbol,Arity,F),
-              memberList(symbol(Symbol,Arity),Symbols),
-              assert(knowledge(F))),_),
-   findall(_,(worldKnowledge(Symbol,Arity,F),
-              memberList(symbol(Symbol,Arity),Symbols),
-              assert(knowledge(F))),_),
+   %   findall(_,(lexicalKnowledge(Symbol,Arity,F),
+   %              memberList(symbol(Symbol,Arity),Symbols),
+   %              assert(knowledge(F))),_),
+   %   findall(_,(worldKnowledge(Symbol,Arity,F),
+   %              memberList(symbol(Symbol,Arity),Symbols),
+   %              assert(knowledge(F))),_),
    findall(_,(situationalKnowledge(F),
               assert(knowledge(F))),_),
    knowledge2formula(Formula).
@@ -184,3 +184,21 @@ formula2symbols(F,S1,S4):-
    formula2symbols(Arg1,S1,S2),
    formula2symbols(Arg2,S2,S3),
    formula2symbols(Arg3,S3,S4).
+
+formula2symbols(F,S1,[symbol(Symbol,4)|S5]):- 
+   basicFormula(F),
+   compose(F,Symbol,[Arg1,Arg2,Arg3,Arg4]),
+   \+ memberList(symbol(Symbol,4),S1),
+   formula2symbols(Arg1,S1,S2),
+   formula2symbols(Arg2,S2,S3),
+   formula2symbols(Arg3,S3,S4),
+   formula2symbols(Arg4,S4,S5).
+
+formula2symbols(F,S1,S5):- 
+   basicFormula(F),
+   compose(F,Symbol,[Arg1,Arg2,Arg3,Arg4]),
+   memberList(symbol(Symbol,4),S1),
+   formula2symbols(Arg1,S1,S2),
+   formula2symbols(Arg2,S2,S3),
+   formula2symbols(Arg3,S3,S4),
+   formula2symbols(Arg4,S4,S5).
