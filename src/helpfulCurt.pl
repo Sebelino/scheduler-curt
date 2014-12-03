@@ -226,20 +226,31 @@ operateReading(evt(T,A,B),NewReading) :-
     lessThan(A,B),
     combineTimes(Timestamps,evt(T,A,B),NewReading).
 
-operateReading(impspec(evt(Title,From,To),AtTime),Reading) :-
-    Formulas = [
+operateReading(impspec(evt(Title,From,To),At),Reading) :-
+    lessThan(From,To),
+    SomeFormulas = [
         title(Title),
         time(From),
         time(To),
-        time(AtTime),
-        impspec(Title,From,To,AtTime)
+        time(At),
+        lt(From,To),
+        impspec(Title,From,To,At)
     ],
+    currentTimes(CurrentTimes),
+    append(CurrentTimes,[From,To,At],AllTimes),
+    Context = all(X,imp(eq(X,time1),not(eq(X,time2)))),
+    context2formulas(AllTimes,AllTimes,map(time1,time2,Context),OtherFormulas),
+    append(SomeFormulas,OtherFormulas,Formulas),
     formulas2conjunctions(Formulas,Conjunctions),
     Reading = Conjunctions.
 
-context2conjunctions(X,Y,map(Var1,Var2,Context),Reading):-
+context2formulas(X,Y,map(Var1,Var2,Context),Formulas):-
     crossproduct(X,Y,Pairs),
-    pairs2formulas(Pairs,map(Var1,Var2,Context),Formulas),
+    stripEqualPairs(Pairs,NewPairs),
+    pairs2formulas(NewPairs,map(Var1,Var2,Context),Formulas).
+
+context2conjunctions(X,Y,Map,Reading):-
+    context2formulas(X,Y,Map,Formulas),
     formulas2conjunctions(Formulas,Reading).
 
 currentTimes([]) :- models([]).

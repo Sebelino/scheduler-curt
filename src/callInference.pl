@@ -428,6 +428,12 @@ mace2f([predicate(Relation,V)|Terms],D,[f(3,Functor,X)|F]):-
 	positiveTripleValues(V,Size,1,1,1,X),
 	mace2f(Terms,D,F).
 
+mace2f([predicate(Relation,V)|Terms],D,[f(4,Functor,X)|F]):-
+	Relation =.. [Functor,_,_,_,_], !,
+	length(D,Size),
+	positiveQuadrupleValues(V,Size,1,1,1,1,X),
+	mace2f(Terms,D,F).
+
 mace2f([_|Terms],D,F):-
 	mace2f(Terms,D,F).
 
@@ -510,6 +516,37 @@ positiveTripleValues([0|Values],Size,I1,J1,K1,Rest):-
         (I1 = Size, J1 = Size, K1 = Size, I2 = 0, J2 = 0, K2 = 0)
     ),
     positiveTripleValues(Values,Size,I2,J2,K2,Rest).
+
+
+positiveQuadrupleValues([],_,_,_,_,_,[]).
+
+positiveQuadrupleValues([1|Values],Size,I1,J1,K1,L1,[(X4,X3,X2,X1)|Rest]):-
+    name(I1,Codes1),
+    name(X1,[100|Codes1]),
+    name(J1,Codes2),
+    name(X2,[100|Codes2]),
+    name(K1,Codes3),
+    name(X3,[100|Codes3]),
+    name(L1,Codes4),
+    name(X4,[100|Codes4]),
+    (
+        (I1 < Size, I2 is I1+1, J2 is J1, K2 is K1, L2 is L1) ;
+        (I1 = Size, J1 < Size, I2 = 1, J2 is J1+1, K2 is K1, L2 is L1) ;
+        (I1 = Size, J1 = Size, K1 < Size, I2 = 1, J2 = 1, K2 is K1+1, L2 is L1) ;
+        (I1 = Size, J1 = Size, K1 = Size, L1 < Size, I2 = 1, J2 = 1, K2 = 1, L2 is L1 + 1) ;
+        (I1 = Size, J1 = Size, K1 = Size, L1 = Size, I2 = 0, J2 = 0, K2 = 0, L2 = 0)
+    ),
+    positiveQuadrupleValues(Values,Size,I2,J2,K2,L2,Rest).
+
+positiveQuadrupleValues([0|Values],Size,I1,J1,K1,L1,Rest):-
+    (
+        (I1 < Size, I2 is I1+1, J2 is J1, K2 is K1, L2 is L1) ;
+        (I1 = Size, J1 < Size, I2 = 1, J2 is J1+1, K2 is K1, L2 is L1) ;
+        (I1 = Size, J1 = Size, K1 < Size, I2 = 1, J2 = 1, K2 is K1+1, L2 is L1) ;
+        (I1 = Size, J1 = Size, K1 = Size, L1 < Size, I2 = 1, J2 = 1, K2 = 1, L2 is L1 + 1) ;
+        (I1 = Size, J1 = Size, K1 = Size, L1 = Size, I2 = 0, J2 = 0, K2 = 0, L2 = 0)
+    ),
+    positiveQuadrupleValues(Values,Size,I2,J2,K2,L2,Rest).
 
 
 /*========================================================================
