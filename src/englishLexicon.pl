@@ -73,6 +73,9 @@ lexEntry(evt,[symbol:friday,syntax:[friday]]).
 lexEntry(evt,[symbol:saturday,syntax:[saturday]]).
 lexEntry(evt,[symbol:sunday,syntax:[sunday]]).
 
+lexEntry(evt,[symbol:tomorrow,syntax:[tomorrow]]).
+lexEntry(evt,[symbol:nextweek,syntax:[next,week]]).
+
 lexEntry(time,[symbol:Syntax,syntax:[Syntax]]) :-
     timeEntry(Syntax).
 

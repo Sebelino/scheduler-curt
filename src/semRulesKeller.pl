@@ -56,6 +56,8 @@ combine(dayspec:Weekday,[prep:_,evt:Weekday]).
 
 combine(dayspec:DayOffset,[prep:_,time:DayOffset]).
 
+combine(dayspec:SpecificDay,[evt:SpecificDay]).
+
 combine(show:show,[tv:_,adj:_,noun:_]).
 
 combine(s:app(A,B),[s:A,s:B]).

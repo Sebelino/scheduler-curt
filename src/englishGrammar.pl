@@ -209,6 +209,10 @@ dayspec([sem:Dayspec])-->
     time([sem:Dayoffset]),
     {combine(dayspec:Dayspec,[prep:In,time:Dayoffset])}.
 
+dayspec([sem:Dayspec])-->
+    evt([sem:Specificday]),
+    {combine(dayspec:Dayspec,[evt:Specificday])}.
+
 impspec([sem:Impspec])--> 
     eventspec([sem:Eventspec]),
     ['if'],
