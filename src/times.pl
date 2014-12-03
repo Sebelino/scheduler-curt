@@ -2,6 +2,7 @@
 
 :- module(times,[timeEntry/1,
                  dayEntry/1,
+                 exactDateEntry/1,
                  formatTime/2,
                  lessThan/2,
                  timestamp2readable/2,
@@ -13,6 +14,8 @@
                                delta_time/3,
                                julian_calendar_gregorian:month_number/2,
                                compare_time/3]).
+
+:- use_module(library(julian/lang/en),[english/1]).
 
 timeEntry(Time) :-
     between(1,12,Hour),
@@ -33,6 +36,12 @@ dayEntry(Day) :-
     atom_number(AtomCount,Count),
     atom_concat(AtomCount,'days',Day).
 
+exactDateEntry(Y-M-D) :-
+    atom(AtomDate),
+    atom_string(AtomDate,Date),
+    form_time(english(Date),Dt),
+    form_time(Y-M-D,Dt).
+
 formatTime([evt(Activity,TimeA,TimeB)],[evt(Activity,TimestampA,TimestampB)]) :-
     convertTime(TimeA,TimestampA),
     convertTime(TimeB,TimestampB).
@@ -49,6 +58,7 @@ formatTime([Reading],[Reading]) :-
     compose(Reading,Sym,_),
     \+ Sym = evt.
 
+% Monday, Tuesday, Wednesday, ...
 convertTime(MTime,Dayspec,TimeStamp2) :-
     convertTime(MTime,TimeStamp1),
     form_time(today,Today),
@@ -63,6 +73,7 @@ convertTime(MTime,Dayspec,TimeStamp2) :-
     atom_number(DA,D),
     atomic_list_concat([t,YA,MoA,DA,H,Mi],'_',TimeStamp2).
 
+% in N days
 convertTime(MTime,Dayspec,TimeStamp2) :-
     convertTime(MTime,TimeStamp1),
     form_time(today,Today),
@@ -78,6 +89,7 @@ convertTime(MTime,Dayspec,TimeStamp2) :-
     atom_number(DA,D),
     atomic_list_concat([t,YA,MoA,DA,H,Mi],'_',TimeStamp2).
 
+% tomorrow, next week, ...
 convertTime(MTime,Dayspec,TimeStamp2) :-
     convertTime(MTime,TimeStamp1),
     form_time(today,Today),

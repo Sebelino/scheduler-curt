@@ -82,6 +82,9 @@ lexEntry(time,[symbol:Syntax,syntax:[Syntax]]) :-
 lexEntry(time,[symbol:Syntax,syntax:[Syntax]]) :-
     dayEntry(Syntax).
 
+lexEntry(time,[symbol:Syntax,syntax:[Syntax]]) :-
+    exactDateEntry(Syntax).
+
 lexEntry(adj,[symbol:my,syntax:[my]]).
 lexEntry(adj,[symbol:all,syntax:[all]]).
 
