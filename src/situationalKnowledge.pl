@@ -25,7 +25,6 @@
 
 :- dynamic situationalKnowledge/1.
 
-:- use_module(helpfulCurt,[currentTimes/1,crossproduct/3]).
 :- use_module(comsemPredicates,[compose/3]).
 
 formulas2conjunctions([],and(foo,not(foo))).
@@ -75,11 +74,13 @@ substitute(X,E,Term,NewTerm) :-
    Axioms for Situational Knowledge
 ========================================================================*/
 
+% If there is an event (T,A,B), then T is a title and A, B are times.
+situationalKnowledge(Axiom):-
+    Axiom = all(T,all(A,all(B,imp(evt(T,A,B),and(title(T),and(time(A),time(B))))))).
+
 % For all events, start time != end time.
 situationalKnowledge(Axiom):-
-    Axiom = all(T,all(A,all(B,imp(evt(T,A,B),
-    and(time(A),and(time(B),and(title(T),not(eq(A,B)))))
-    )))).
+    Axiom = all(T,imp(title(T),all(A,imp(time(A),all(B,imp(time(B),imp(evt(T,A,B),not(eq(A,B))))))))).
 
 % Titles are not times.
 situationalKnowledge(Axiom):-
