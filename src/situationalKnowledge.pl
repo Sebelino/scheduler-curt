@@ -89,6 +89,10 @@ situationalKnowledge(Axiom):-
 situationalKnowledge(Axiom):-
     Axiom = all(X,imp(time(X),not(title(X)))).
 
+% Implication calendar rule.
+situationalKnowledge(Axiom):-
+    Axiom = all(X,imp(time(X),all(Y,imp(time(Y),all(Z,imp(time(Z),all(T2,imp(title(T2),imp(some(A,and(time(A),some(B,and(time(B),some(T1,and(title(T1),and(evt(T1,A,B),and(impspec(T2,X,Y,Z),and(lt(A,Z),lt(Z,B)))))))))),evt(T2,X,Y)))))))))).
+
 %% Two different times cannot be equal.
 %situationalKnowledge(Axiom):-
 %    currentTimes(Times),
