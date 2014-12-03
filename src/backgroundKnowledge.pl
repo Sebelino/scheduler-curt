@@ -71,7 +71,7 @@ backgroundKnowledge(Formula1,Symbols1,Formula3):-
    Computing World Knowledge
 ========================================================================*/
 
-computeBackgroundKnowledge(Symbols,Formula):-
+computeBackgroundKnowledge(_,Formula):-
    retractall(knowledge(_)),
    %   findall(_,(lexicalKnowledge(Symbol,Arity,F),
    %              memberList(symbol(Symbol,Arity),Symbols),
