@@ -21,7 +21,7 @@
 
 *************************************************************************/
 
-:- use_module(times,[timeEntry/1,dayEntry/1]).
+:- use_module(times,[timeEntry/1,dayEntry/1,exactDateEntry/3]).
 
 /*
  * wh-embedding verbs
@@ -82,8 +82,8 @@ lexEntry(time,[symbol:Syntax,syntax:[Syntax]]) :-
 lexEntry(time,[symbol:Syntax,syntax:[Syntax]]) :-
     dayEntry(Syntax).
 
-lexEntry(time,[symbol:Syntax,syntax:[Syntax]]) :-
-    exactDateEntry(Syntax).
+lexEntry(time,[symbol:[Date,Month,Year],syntax:[Date,Month,Year]]) :-
+    exactDateEntry(Date,Month,Year).
 
 lexEntry(adj,[symbol:my,syntax:[my]]).
 lexEntry(adj,[symbol:all,syntax:[all]]).

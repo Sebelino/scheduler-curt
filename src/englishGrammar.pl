@@ -205,6 +205,11 @@ dayspec([sem:Dayspec])-->
     {combine(dayspec:Dayspec,[prep:On,evt:Weekday])}.
 
 dayspec([sem:Dayspec])-->
+    prep([sem:On]),
+    time([sem:ExactDate]),
+    {combine(dayspec:Dayspec,[prep:On,time:ExactDate])}.
+
+dayspec([sem:Dayspec])-->
     prep([sem:In]),
     time([sem:Dayoffset]),
     {combine(dayspec:Dayspec,[prep:In,time:Dayoffset])}.
