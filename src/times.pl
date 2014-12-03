@@ -2,12 +2,14 @@
 
 :- module(times,[timeEntry/1,
                  dayEntry/1,
-                 exactDateEntry/1,
+                 exactDateEntry/3,
                  formatTime/2,
                  lessThan/2,
                  timestamp2readable/2,
                  capitalize/2,
-                 lessThan/2]).
+                 lessThan/2,
+                 form_time/2,
+                 english_form/3]).
 
 :- use_module(library(julian),[form_time/1,
                                form_time/2,
@@ -15,7 +17,7 @@
                                julian_calendar_gregorian:month_number/2,
                                compare_time/3]).
 
-:- use_module(library(julian/lang/en),[english/1]).
+:- use_module(library(julian/lang/en),[english_form/3]).
 
 timeEntry(Time) :-
     between(1,12,Hour),
@@ -36,11 +38,14 @@ dayEntry(Day) :-
     atom_number(AtomCount,Count),
     atom_concat(AtomCount,'days',Day).
 
-exactDateEntry(Y-M-D) :-
-    atom(AtomDate),
-    atom_string(AtomDate,Date),
-    form_time(english(Date),Dt),
-    form_time(Y-M-D,Dt).
+exactDateEntry(DateSuffix,Month,Year) :-
+    between(1,31,Date),
+    atom_number(AtomDate,Date),
+    member(Suffix,['st','nd','rd','th']),
+    atom_concat(AtomDate,Suffix,DateSuffix),
+    member(Month,['january','february','march','april','may','june','july','august','september','october','november','december']),
+    between(1990,2090,Year).
+    % atom_number(AtomYear,Year),
 
 formatTime([evt(Activity,TimeA,TimeB)],[evt(Activity,TimestampA,TimestampB)]) :-
     convertTime(TimeA,TimestampA),
@@ -60,6 +65,7 @@ formatTime([Reading],[Reading]) :-
 
 % Monday, Tuesday, Wednesday, ...
 convertTime(MTime,Dayspec,TimeStamp2) :-
+    member(Dayspec,['sunday','monday','tuesday','wednesday','thursday','friday','saturday']),
     convertTime(MTime,TimeStamp1),
     form_time(today,Today),
     between(1,7,NDays),
@@ -75,6 +81,7 @@ convertTime(MTime,Dayspec,TimeStamp2) :-
 
 % in N days
 convertTime(MTime,Dayspec,TimeStamp2) :-
+    atom(Dayspec),
     convertTime(MTime,TimeStamp1),
     form_time(today,Today),
     atom_length(Dayspec,ALen),
@@ -91,6 +98,7 @@ convertTime(MTime,Dayspec,TimeStamp2) :-
 
 % tomorrow, next week, ...
 convertTime(MTime,Dayspec,TimeStamp2) :-
+    member(Dayspec,['tomorrow','nextweek']),
     convertTime(MTime,TimeStamp1),
     form_time(today,Today),
     mapDayToOffset(Dayspec,Offset),
@@ -99,14 +107,21 @@ convertTime(MTime,Dayspec,TimeStamp2) :-
     atom_number(YA,Y),
     atom_number(MoA,Mo),
     atom_number(DA,D),
-    atomic_list_concat([t,YA,MoA,DA,H,Mi],'_',TimeStamp2).
+    atomic_list_concat([t,YA,MoA,DA,H,Mi],'_',TimeStamp2),
+    !.
 
-mapDayToOffset(Dayspec,Offset) :-
-    Dayspec = 'tomorrow',
-    Offset = 0
-    ;
-    Dayspec = 'nextweek',
-    Offset = 6.
+% 3rd December 2014
+convertTime(MTime,Dayspec,TimeStamp2) :-
+    convertTime(MTime,TimeStamp1),
+    atomic_list_concat([t,_,_,_,H,Mi],'_',TimeStamp1),
+    atomic_list_concat(Dayspec,' ',AtomExactDate),
+    atom_codes(AtomExactDate,ExactDate),
+    phrase(english_form(Dt),ExactDate),
+    Dt = nth(D,gregorian(Y,Mo,_)),
+    atom_number(YA,Y),
+    atom_number(MoA,Mo),
+    atom_number(DA,D),
+    atomic_list_concat([t,YA,MoA,DA,H,Mi],'_',TimeStamp2).
 
 % '7pm' -> '2014_12_1_19_0'
 % '11:15am' -> '2014_12_1_11_15'
@@ -118,6 +133,12 @@ convertTime(MTime,TimeStamp) :-
     atom_number(DA,D),
     atomic_list_concat([t,YA,MoA,DA,Hour,Minute],'_',TimeStamp).
 
+mapDayToOffset(Dayspec,Offset) :-
+    Dayspec = 'tomorrow',
+    Offset = 0
+    ;
+    Dayspec = 'nextweek',
+    Offset = 6.
 
 % '7pm' -> '19', '7am' -> '7'
 meridiem2clock(MTime,Hour,'0') :-
