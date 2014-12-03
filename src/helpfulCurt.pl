@@ -220,11 +220,24 @@ operateReading(evt(T,A,B),and(evt(T,A,B),lt(A,B))) :-
 
 operateReading(evt(_,A,B),and(foo,not(foo))) :-
     \+ lessThan(A,B).
+operateReading(impspec(evt(_,A,B),_),and(foo,not(foo))) :-
+    \+ lessThan(A,B).
 
-operateReading(evt(T,A,B),NewReading) :-
-    currentTimes(Timestamps),
+operateReading(evt(T,A,B),Reading) :-
     lessThan(A,B),
-    combineTimes(Timestamps,evt(T,A,B),NewReading).
+    SomeFormulas = [
+        evt(T,A,B),
+        lt(A,B),
+        all(X,imp(title(X),not(eq(X,A)))),
+        all(X,imp(title(X),not(eq(X,B))))
+    ],
+    currentTimes(CurrentTimes),
+    crossproduct(CurrentTimes,[A,B],Pairs),
+    stripEqualPairs(Pairs,NewPairs),
+    Context = all(X,imp(eq(X,time1),not(eq(X,time2)))),
+    pairs2formulas(NewPairs,map(time1,time2,Context),OtherFormulas),
+    append(SomeFormulas,OtherFormulas,Formulas),
+    formulas2conjunctions(Formulas,Reading).
 
 operateReading(impspec(evt(Title,From,To),At),Reading) :-
     lessThan(From,To),
@@ -241,8 +254,7 @@ operateReading(impspec(evt(Title,From,To),At),Reading) :-
     Context = all(X,imp(eq(X,time1),not(eq(X,time2)))),
     context2formulas(AllTimes,AllTimes,map(time1,time2,Context),OtherFormulas),
     append(SomeFormulas,OtherFormulas,Formulas),
-    formulas2conjunctions(Formulas,Conjunctions),
-    Reading = Conjunctions.
+    formulas2conjunctions(Formulas,Reading).
 
 context2formulas(X,Y,map(Var1,Var2,Context),Formulas):-
     crossproduct(X,Y,Pairs),
@@ -261,18 +273,6 @@ currentTimes(Timestamps) :-
         member(f(1,time,Elements),I),
         member(Element,Elements)
     ),Timestamps).
-
-combineTimes(OldTimes,evt(T,A,B),Reading) :-
-    crossproduct(OldTimes,[A,B],Pairs),
-    stripEqualPairs(Pairs,NewPairs),
-    pairs2formulas(NewPairs,map(var1,var2,all(X,imp(eq(X,var1),not(eq(X,var2))))),Formulas),
-    formulas2conjunctions(Formulas,Tree),
-    R1 = and(evt(T,A,B),R2),
-    R2 = and(lt(A,B),R3),
-    R3 = and(all(X,imp(title(X),not(eq(X,A)))),R4),
-    R4 = and(all(X,imp(title(X),not(eq(X,B)))),Last),
-    Last = Tree,
-    Reading = R1.
 
 stripEqualPairs(Pairs,NewPairs) :-
     findall([E1,E2],(
