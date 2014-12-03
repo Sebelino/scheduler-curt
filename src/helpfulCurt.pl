@@ -21,7 +21,7 @@
 
 *************************************************************************/
 
-:- module(curt,[curt/0,infix/0,prefix/0,currentTimes/1,crossproduct/3]).
+:- module(curt,[curt/0,infix/0,prefix/0,currentDomain/2,crossproduct/3]).
 
 :- use_module(callInference,[callTP/3,
                              callTPandMB/6]).
@@ -227,16 +227,21 @@ operateReading(evt(T,A,B),Reading) :-
     lessThan(A,B),
     SomeFormulas = [
         evt(T,A,B),
-        lt(A,B),
-        all(X,imp(title(X),not(eq(X,A)))),
-        all(X,imp(title(X),not(eq(X,B))))
+        lt(A,B)
     ],
-    currentTimes(CurrentTimes),
+    % Times
+    currentDomain(time,CurrentTimes),
     crossproduct(CurrentTimes,[A,B],Pairs),
     stripEqualPairs(Pairs,NewPairs),
-    Context = all(X,imp(eq(X,time1),not(eq(X,time2)))),
-    pairs2formulas(NewPairs,map(time1,time2,Context),OtherFormulas),
-    append(SomeFormulas,OtherFormulas,Formulas),
+    Context = all(X,imp(eq(X,e1),not(eq(X,e2)))),
+    pairs2formulas(NewPairs,map(e1,e2,Context),TimeFormulas),
+    % Titles
+    currentDomain(title,CurrentTitles),
+    crossproduct(CurrentTitles,[T],TitlePairs),
+    stripEqualPairs(TitlePairs,NewTitlePairs),
+    pairs2formulas(NewTitlePairs,map(e1,e2,Context),TitleFormulas),
+    % Finish
+    append([SomeFormulas,TimeFormulas,TitleFormulas],Formulas),
     formulas2conjunctions(Formulas,Reading).
 
 operateReading(impspec(evt(Title,From,To),At),Reading) :-
@@ -249,7 +254,7 @@ operateReading(impspec(evt(Title,From,To),At),Reading) :-
         lt(From,To),
         impspec(Title,From,To,At)
     ],
-    currentTimes(CurrentTimes),
+    currentDomain(time,CurrentTimes),
     append(CurrentTimes,[From,To,At],AllTimes),
     Context = all(X,imp(eq(X,time1),not(eq(X,time2)))),
     context2formulas(AllTimes,AllTimes,map(time1,time2,Context),OtherFormulas),
@@ -265,12 +270,12 @@ context2conjunctions(X,Y,Map,Reading):-
     context2formulas(X,Y,Map,Formulas),
     formulas2conjunctions(Formulas,Reading).
 
-currentTimes([]) :- models([]).
-currentTimes(Timestamps) :-
+currentDomain(_,[]) :- models([]).
+currentDomain(Domain,Timestamps) :-
     models([model(_,I)]),
     findall(C,(
         member(f(0,C,Element),I),
-        member(f(1,time,Elements),I),
+        member(f(1,Domain,Elements),I),
         member(Element,Elements)
     ),Timestamps).
 
