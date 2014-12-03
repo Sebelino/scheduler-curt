@@ -94,7 +94,8 @@ convertTime(MTime,Dayspec,TimeStamp2) :-
     atom_number(YA,Y),
     atom_number(MoA,Mo),
     atom_number(DA,D),
-    atomic_list_concat([t,YA,MoA,DA,H,Mi],'_',TimeStamp2).
+    atomic_list_concat([t,YA,MoA,DA,H,Mi],'_',TimeStamp2),
+    !.
 
 % tomorrow, next week, ...
 convertTime(MTime,Dayspec,TimeStamp2) :-

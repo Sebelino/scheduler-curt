@@ -36,6 +36,8 @@ sentence([movie,from,'7am',to,'9am',on,friday],1).
 
 sentence([movie,from,'7am',to,'9am'],1).
 
+sentence([movie,from,'7am',to,'9am',tomorrow],1).
+
 sentence([movie,from,'7pm',to,'9pm',in,'3days'],1).
 
 sentence([movie],1).
