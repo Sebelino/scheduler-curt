@@ -226,8 +226,7 @@ operateReading(impspec(evt(_,A,B),_),and(foo,not(foo))) :-
 operateReading(evt(T,A,B),Reading) :-
     lessThan(A,B),
     SomeFormulas = [
-        evt(T,A,B),
-        lt(A,B)
+        evt(T,A,B)
     ],
     % Times
     currentDomain(time,CurrentTimes),
@@ -240,8 +239,11 @@ operateReading(evt(T,A,B),Reading) :-
     crossproduct(CurrentTitles,[T],TitlePairs),
     stripEqualPairs(TitlePairs,NewTitlePairs),
     pairs2formulas(NewTitlePairs,map(e1,e2,Context),TitleFormulas),
+    % Less-thans
+    AllTimes = [A,B|CurrentTimes],
+    ltFormulas(AllTimes,LtFormulas),
     % Finish
-    append([SomeFormulas,TimeFormulas,TitleFormulas],Formulas),
+    append([SomeFormulas,TimeFormulas,TitleFormulas,LtFormulas],Formulas),
     formulas2conjunctions(Formulas,Reading).
 
 operateReading(impspec(evt(Title,From,To),At),Reading) :-
@@ -251,15 +253,23 @@ operateReading(impspec(evt(Title,From,To),At),Reading) :-
         time(From),
         time(To),
         time(At),
-        lt(From,To),
         impspec(Title,From,To,At)
     ],
     currentDomain(time,CurrentTimes),
     append(CurrentTimes,[From,To,At],AllTimes),
     Context = all(X,imp(eq(X,time1),not(eq(X,time2)))),
     context2formulas(AllTimes,AllTimes,map(time1,time2,Context),OtherFormulas),
-    append(SomeFormulas,OtherFormulas,Formulas),
+    ltFormulas(AllTimes,LtFormulas),
+    append([SomeFormulas,OtherFormulas,LtFormulas],Formulas),
     formulas2conjunctions(Formulas,Reading).
+
+% For each pair (x,y) in Times x Times, computes a list of lt(x,y) if x < y.
+ltFormulas(Times,Formulas) :-
+    findall(lt(X,Y),(
+        member(X,Times),
+        member(Y,Times),
+        lessThan(X,Y)
+    ),Formulas).
 
 context2formulas(X,Y,map(Var1,Var2,Context),Formulas):-
     crossproduct(X,Y,Pairs),
