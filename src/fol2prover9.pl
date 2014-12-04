@@ -48,7 +48,7 @@ fol2mace4(Formula,Stream):-
 	format(Stream,'set(auto).~n~n',[]),
 	format(Stream,'clear(print_proofs).~n~n',[]),
 	format(Stream,'set(prolog_style_variables).~n~n',[]),
-	format(Stream,'formula(sos).~n~n',[]),
+	format(Stream,'formulas(sos).~n~n',[]),
 	printProver9Formula(Stream,Formula),
 	format(Stream,'~nend_of_list.~n',[]).
 

@@ -94,7 +94,8 @@ convertTime(MTime,Dayspec,TimeStamp2) :-
     atom_number(YA,Y),
     atom_number(MoA,Mo),
     atom_number(DA,D),
-    atomic_list_concat([t,YA,MoA,DA,H,Mi],'_',TimeStamp2).
+    atomic_list_concat([t,YA,MoA,DA,H,Mi],'_',TimeStamp2),
+    !.
 
 % tomorrow, next week, ...
 convertTime(MTime,Dayspec,TimeStamp2) :-
@@ -135,10 +136,10 @@ convertTime(MTime,TimeStamp) :-
 
 mapDayToOffset(Dayspec,Offset) :-
     Dayspec = 'tomorrow',
-    Offset = 0
+    Offset = 1
     ;
     Dayspec = 'nextweek',
-    Offset = 6.
+    Offset = 7.
 
 % '7pm' -> '19', '7am' -> '7'
 meridiem2clock(MTime,Hour,'0') :-

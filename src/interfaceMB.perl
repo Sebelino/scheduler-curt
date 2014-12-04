@@ -22,14 +22,23 @@ eval 'exec perl -w -S $0 ${1+"$@"}'
 #
 my $domainsize = $ARGV[0];
 my $mace_selected = ($ARGV[1] =~ /mace/);
+my $mace4_selected = ($ARGV[1] =~ /mace4/);
 my $paradox_selected = ($ARGV[1] =~ /paradox/);
 my $mace_result = 0;
+my $mace4_result = 0;
 my $paradox_result = 0;
 my $readmacemodel = 0;
+my $readmace4model = 0;
 my $readparadoxmodel = 0;
 my $readmace = 0;
+my $readmace4 = 0;
 my $readparadox = 0;
 my $model = "";
+
+if ($mace4_selected) {
+   open(MACE4_OUTPUT, "mace4 -t 30 -c -N$domainsize -f mace4.in |");
+   $readmace4=1;
+}
 
 if ($mace_selected) {
    #open(MACE_OUTPUT, "mace -t 30 -n1 -N$domainsize -P < mace.in 2>/dev/null |");
@@ -43,7 +52,28 @@ if ($paradox_selected) {
    $readparadox=1;
 } 
 
-while($readmace || $readparadox) { 
+while($readmace4 || $readmace || $readparadox) { 
+  if ($readmace4 && defined($_ = <MACE4_OUTPUT>)) {
+     if ($_ =~ /============================== end of model ==========================/) {
+        $readmace4model = 0;
+        $readmace4 = 0;
+        $mace4_result = 1;
+     }
+     elsif ($readmace4model == 1) {
+        $model = "$model$_";
+        $model =~ s/\$(.*?)\,/$1\,/;
+     }
+     elsif ($_ =~ /============================== MODEL/) {
+        $readmace4model = 1;
+        $readmacemodel = 0;
+        $readparadox = 0;
+        $readotter = 0;
+        $readbliksem = 0;
+     }
+  }
+  else {
+     $readmace4=0;
+  }
   if ($readmace && defined($_ = <MACE_OUTPUT>)) {
      if ($_ =~ /end_of_model/) {
         $readmacemodel = 0;
@@ -56,6 +86,7 @@ while($readmace || $readparadox) {
      }
      elsif ($_ =~ /======================= Model/) {
         $readmacemodel = 1;
+        $readmace4model = 0;
         $readparadox = 0;
         $readotter = 0;
         $readbliksem = 0;
@@ -84,6 +115,7 @@ while($readmace || $readparadox) {
         $model = "paradox([\n";
         $readparadoxmodel = 1;
         $readmace = 0;
+        $readmace4 = 0;
         $readotter = 0;
         $readbliksem = 0;
      }
@@ -91,6 +123,10 @@ while($readmace || $readparadox) {
   else {
      $readparadox=0;
   }
+}
+
+if ($mace4_selected) {
+   close MACE4_OUTPUT;
 }
 
 if ($mace_selected) {
@@ -102,7 +138,11 @@ if ($paradox_selected) {
 }
 
 open(OUTPUT,">mb.out");
-if ($mace_result == 1) {
+if ($mace4_result == 1) {
+   print OUTPUT "$model";
+   print OUTPUT "engine(mace4).\n";
+}
+elsif ($mace_result == 1) {
    print OUTPUT "$model";
    print OUTPUT "engine(mace).\n";
 }

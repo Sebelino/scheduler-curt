@@ -27,5 +27,5 @@
 
 %inferenceEngines([paradox,bliksem]).
 %inferenceEngines([paradox,otter]).
-inferenceEngines([mace,otter,prover9]).
+inferenceEngines([mace4,mace,otter,prover9]).
 %inferenceEngines([otter,paradox,bliksem,mace]).
