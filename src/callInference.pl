@@ -147,6 +147,10 @@ callMB(Problem,DomainSize,Model,Engine):-
    open('mb.out',read,Out),
    read(Out,Result),
    (
+      Result=interpretation(_,_,_),
+      read(Out,engine(Engine)),
+      mace2blackburnbos(Result,_,Model), !
+   ;
       Result=interpretation(_,_),
       read(Out,engine(Engine)),
       mace2blackburnbos(Result,Model), !
@@ -180,6 +184,11 @@ callTPandMB(TPProblem,MBProblem,DomainSize,Proof,Model,Engine):-
       read(Out,engine(Engine)),
       Proof=proof,
       Model=unknown
+   ;
+      Result=interpretation(_,_,_),
+      read(Out,engine(Engine)),
+      mace2blackburnbos(Result,_,Model), !,
+      Proof=unknown
    ;
       Result=interpretation(_,_),
       read(Out,engine(Engine)),
@@ -382,6 +391,14 @@ mace2blackburnbos(Mace,model(D,F)):-
 
 mace2blackburnbos(Mace,unknown):-
    \+ Mace = interpretation(_Size,_Terms).
+
+mace2blackburnbos(Mace,_,model(D,F)):-
+   Mace = interpretation(Size,_,Terms),
+   mace2d(1,Size,D),
+   mace2f(Terms,D,F).
+
+mace2blackburnbos(Mace,_,unknown):-
+   \+ Mace = interpretation(_Size,_,_Terms).
 
 
 /*========================================================================

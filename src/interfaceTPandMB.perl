@@ -79,7 +79,7 @@ while( (keys %pids) > 0 && $winner eq "") {
       my $readmace4model = 0;
       open(OUTPUT,"mace4.out");
       while (<OUTPUT>) {
-             if (/end_of_model/) {
+             if (/============================== end of model ==========================/) {
                 $winner = "mace4";
                 $readmace4model = 0;
 #		print $log "mace4 won.\n"
@@ -88,7 +88,7 @@ while( (keys %pids) > 0 && $winner eq "") {
                 $model = "$model$_";
                 $model =~ s/\$(.*?)\,/$1\,/;
              }
-             elsif (/======================= Model/) {
+             elsif (/============================== MODEL/) {
                 $readmace4model = 1;
 	    }
       }
