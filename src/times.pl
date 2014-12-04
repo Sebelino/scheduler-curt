@@ -136,10 +136,10 @@ convertTime(MTime,TimeStamp) :-
 
 mapDayToOffset(Dayspec,Offset) :-
     Dayspec = 'tomorrow',
-    Offset = 0
+    Offset = 1
     ;
     Dayspec = 'nextweek',
-    Offset = 6.
+    Offset = 7.
 
 % '7pm' -> '19', '7am' -> '7'
 meridiem2clock(MTime,Hour,'0') :-
