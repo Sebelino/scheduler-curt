@@ -88,6 +88,12 @@ initTheoremProvers([_|L],Formula):-
 
 initModelBuilders([],_).
 
+initModelBuilders([mace4|L],Formula):- !,
+   open('mace4.in',write,Stream),
+   fol2mace4(Formula,Stream),
+   close(Stream),
+   initModelBuilders(L,Formula).
+
 initModelBuilders([mace|L],Formula):- !,
    open('mace.in',write,Stream),
    fol2mace(Formula,Stream),

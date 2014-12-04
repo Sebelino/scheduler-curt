@@ -37,6 +37,7 @@ my %command = (
  otter   => "otter < otter.in > otter.out 2>/dev/null; echo otter > otter.ready",
  prover9   => "prover9 < prover9.in > prover9.out 2>/dev/null; echo prover9 > prover9.ready",
  bliksem => "bliksem < bliksem.in > bliksem.out 2>/dev/null; echo bliksem > bliksem.ready",
+ mace4 => "mace4 -t 30 -c -N$domainsize -f mace4.in > mace4.out 2>/dev/null; echo mace4 > mace4.ready",
  mace    => "mace -t20 -n1 -N$domainsize -P < mace.in > mace.out 2>/dev/null; echo mace > mace.ready",
  paradox => "paradox paradox.in --sizes 1..$domainsize --print Model > paradox.out 2>/dev/null; echo paradox > paradox.ready"
 );
@@ -49,7 +50,7 @@ system "rm -f *.ready";
 
 # run any requested processes
 #foreach my $p (("otter", "bliksem", "mace", "paradox")) {
-foreach my $p (("prover9", "otter", "bliksem", "mace", "paradox")) {
+foreach my $p (("prover9", "otter", "bliksem", "mace4", "mace", "paradox")) {
    if ($pleaseload =~ /$p/) {
       my $forkedpid = fork;
       unless ($forkedpid) {
@@ -73,6 +74,27 @@ while( (keys %pids) > 0 && $winner eq "") {
 
   # give some time to the child processes
   sleep 0.5;
+
+  if (-e "mace4.ready" && $winner eq "") {
+      my $readmace4model = 0;
+      open(OUTPUT,"mace4.out");
+      while (<OUTPUT>) {
+             if (/end_of_model/) {
+                $winner = "mace4";
+                $readmace4model = 0;
+#		print $log "mace4 won.\n"
+             }
+             elsif ($readmace4model) {
+                $model = "$model$_";
+                $model =~ s/\$(.*?)\,/$1\,/;
+             }
+             elsif (/======================= Model/) {
+                $readmace4model = 1;
+	    }
+      }
+      close(OUTPUT);
+      delete $pids{mace4};
+  }
 
   if (-e "mace.ready" && $winner eq "") {
       my $readmacemodel = 0;
