@@ -121,7 +121,7 @@ chapter6:-
    format('* ~a ~t*~70|~n', [' <4> Sensitive Curt (sensitiveCurt.pl)']),
    format('* ~a ~t*~70|~n', [' <5> Scrupulous Curt (scrupulousCurt.pl)']),
    format('* ~a ~t*~70|~n', [' <6> Knowledgeable Curt (knowledgeableCurt.pl)']),
-   format('* ~a ~t*~70|~n', [' <7> Helpful Curt (helpfulCurt.pl)']),
+   format('* ~a ~t*~70|~n', [' <7> Scheduler Curt (schedulerCurt.pl)']),
    format('*~t*~70|~n', []),
    format('* ~a ~t*~70|~n', [' <0> Main Menu']),
    format('*~t*~70|~n', []),
@@ -195,7 +195,7 @@ loop6(S):-
    ; X=4, !, S=quit, [sensitiveCurt]
    ; X=5, !, S=quit, [scrupulousCurt]
    ; X=6, !, S=quit, [knowledgeableCurt]
-   ; X=7, !, S=quit, [helpfulCurt]
+   ; X=7, !, S=quit, [schedulerCurt]
    ; S=run ).
 
 getChar(Y):-

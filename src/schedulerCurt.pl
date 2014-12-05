@@ -1,7 +1,7 @@
 /*************************************************************************
 
-    File: helpfulCurt.pl
-    Copyright (C) 2004,2005,2006 Patrick Blackburn & Johan Bos
+    File: schedulerCurt.pl
+    Copyright (C) 2004,2005,2006 Patrick Blackburn, Johan Bos, Sebastian Olsson, Ken Cheung
 
     This file is part of BB1, version 1.3 (November 2006).
 
@@ -591,7 +591,7 @@ checkAnswer(Answer,Proof):-
 
 info:-
    format('~n> ---------------------------------------------------------- <',[]),
-   format('~n> helpfulCurt.pl, by Patrick Blackburn and Johan Bos         <',[]),
+   format('~n> schedulerCurt.pl, by Sebastian Olsson and Ken Cheung       <',[]),
    format('~n>                                                            <',[]),
    format('~n> ?- curt.                - start a dialogue with Curt       <',[]),
    format('~n>                                                            <',[]),
