@@ -158,12 +158,12 @@ curtUpdate([X,my,Y],[],run):-
     member(X,[show,list,display]),
     member(Y,[appointments,events,schedule]),
     (
-        models([M]),
-        showModel(M)
+        (models([]) ; models([model(_,I)]), member(f(3,evt,[]),I)),
+        format('Curt: Your schedule contains no events.',[])
     ) ;
     (
-        models([]),
-        format('Curt: Your schedule contains no events.',[])
+        models([M]),
+        showModel(M)
     ).
 
 curtUpdate(Input,Moves,run):-
