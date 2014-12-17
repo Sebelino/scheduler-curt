@@ -154,7 +154,9 @@ curtUpdate([history],[],run):- !,
    printRepresentations(H).
 
 
-curtUpdate([show,my,appointments],[],run):-
+curtUpdate([X,my,Y],[],run):-
+    member(X,[show,list,display]),
+    member(Y,[appointments,events,schedule]),
     (
         models([M]),
         showModel(M)
