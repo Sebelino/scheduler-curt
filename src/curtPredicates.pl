@@ -71,8 +71,8 @@ realiseMove(clarify,'Want to tell me something?').
 realiseMove(bye,'Goodbye!').
 realiseMove(accept,'OK.').
 realiseMove(noparse,'What?').
-realiseMove(contradiction,'No! I do not believe that!').
-realiseMove(obvious,'Well, that is obvious!').
+realiseMove(contradiction,'I am afraid I cannot do that.').
+realiseMove(obvious,'Yeah, I already knew that.').
 realiseMove(unknown_answer,'I have no idea.').
 realiseMove(sensible_question,'This question makes sense!').
 realiseMove(answer(String),String).
